@@ -1,7 +1,32 @@
 import { useState } from 'react'
 
+const Button = ({setSelected, anecdotes}) => {
+		const NextAnecdote = () => {
+			setSelected(Math.floor(Math.random() * 10 % anecdotes.length))	
+		}
+		return (
+			<span>
+				<button onClick={NextAnecdote}>next anecdote</button>
+			</span>
+		)
+}
+
+const Vote = ({selected, points, setPoints}) => {
+		const AddVote = () => {
+			const points_cpy = [...points]
+			points_cpy[selected] += 1
+			setPoints(points_cpy)
+		}
+		return (
+			<span>
+				<button onClick={AddVote}>vote</button>
+			</span>
+		)
+}
+
 function App() {
 	const [selected, setSelected] = useState(0)
+	const [points, setPoints] = useState(new Uint8Array(8))
 
 	const anecdotes = [
 		'If it hurts, do it more often.',
@@ -17,7 +42,9 @@ function App() {
 	  return (
 		<div>
 			<h1>{anecdotes[selected]}</h1>
-			<button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>next anecdote </button>
+			<Vote selected={selected} points={points} setPoints={setPoints}/>
+			<Button setSelected={setSelected} anecdotes={anecdotes}/>
+			<p>has {points[selected]} points</p>
 		</div>
 	  )
 	}
