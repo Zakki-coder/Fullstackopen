@@ -24,6 +24,19 @@ const Vote = ({selected, points, setPoints}) => {
 		)
 }
 
+const MostVotes = ({anecdotes, points}) => {
+	const max = Math.max(...points)
+	const idx = points.indexOf(max)
+
+	return (
+		<div>
+			<h1>Anecdote with the most votes</h1>
+			{anecdotes[idx]}<br></br>
+			has {max} votes
+		</div>
+	)
+}
+
 function App() {
 	const [selected, setSelected] = useState(0)
 	const [points, setPoints] = useState(new Uint8Array(8))
@@ -39,15 +52,15 @@ function App() {
 		'The only way to go fast, is to go well.'
 		]
 
-	  return (
+	return (
 		<div>
-			<h1>{anecdotes[selected]}</h1>
+			<h1>Anecdote of the day</h1>
+			<p>{anecdotes[selected]}</p>
 			<Vote selected={selected} points={points} setPoints={setPoints}/>
 			<Button setSelected={setSelected} anecdotes={anecdotes}/>
-			<p>has {points[selected]} points</p>
+			<MostVotes anecdotes={anecdotes} points={points} />
 		</div>
-	  )
+		)
 	}
-
 
 export default App;
