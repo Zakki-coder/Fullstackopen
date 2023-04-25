@@ -1,51 +1,4 @@
-const Header = ({name}) => {
-	return (
-		<h1>{name}</h1>
-	)
-}
-
-const Part = ({props}) => {
-	return (
-		<p> {props.name} {props.exercises} </p>
-	)
-}
-
-const Content = ({props}) => {
-	const parts = props.parts
-	return (
-		<div>
-			{parts.map(part =>
-				<Part key={part.id} props={part} />)}
-		</div>
-	)
-}
-
-const Total = ({props}) => {
-	const exercises = props.parts.map(part =>
-		part.exercises).reduce((partialSum, a) => partialSum + a, 0)
-	return (
-			<b>total of {exercises} exercises</b>
-	)
-}
-
-const Course = ({course}) => {
-	return (
-		<div>
-			<Header name={course.name} />
-			<Content props={course}/>
-			<Total props={course}/>
-		</div>
-	)
-}
-
-const Courses = ({courses}) => {
-	return (
-		  <div>
-			{courses.map(course =>
-				<Course key={course.id} course={course} />)}
-		  </div>
-	)
-}
+import Course from './components/Course';
 
 const App = () => {
 	const courses = [
@@ -95,7 +48,7 @@ const App = () => {
   
 	return (
 	  <div>
-		<Courses courses={courses} />
+		<Course courses={courses} />
 	  </div>
 	)
   }
