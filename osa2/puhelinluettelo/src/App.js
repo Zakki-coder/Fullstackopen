@@ -13,13 +13,17 @@ const App = () => {
 
   const addContact = (event) => {
 	event.preventDefault()
-	console.log('Button click', event.target)
-	setPersons(persons.concat({name: newName}))
+	if (!persons.some(person => person.name.toLowerCase() === newName.toLowerCase())) {
+		setPersons(persons.concat({name: newName}))
+	}
+	else 
+		alert(`${newName} is already added to phonebook`)
   }
 
   const Person = ({person}) => {
 	return <li>{person.name}</li>
   }
+
   return (
 	<div>
 	  <h2>Phonebook</h2>
