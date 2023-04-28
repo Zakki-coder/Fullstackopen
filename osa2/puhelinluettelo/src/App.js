@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import phonebook from './services/phonebook'
 
 	const Person = ({person, newFilter}) => {
 	if (newFilter.length <= 0)
@@ -52,13 +53,14 @@ const App = () => {
 	const [persons, setPersons] = useState([])
 
 	useEffect(() => {
-	axios
-		.get('http://localhost:3001/persons')
-		.then(response => {
-			console.log('Data fetched')
-			setPersons(response.data)
-			setNewName('')
-			setNumber('')
+		console.log('EFFECT')
+		phonebook
+			.getAll()
+			.then(initialPersons => {
+				console.log('Initial data fetched')
+				setPersons(initialPersons)
+				setNewName('')
+				setNumber('')
 		})
 	}, [])
 
@@ -68,6 +70,7 @@ const App = () => {
 
 	const addContact = (event) => {
 	event.preventDefault()
+	//persons map is failing if there is persons object without a name
 	if (!persons.some(person => person.name.toLowerCase() === newName.toLowerCase())) {
 		if (newName.length > 0) {
 			const personObject = {
@@ -75,10 +78,10 @@ const App = () => {
 				number: newNumber
 			}
 
-			axios
-				.post('http://localhost:3001/persons', personObject)
-				.then(response =>
-					console.log(response))
+			phonebook
+				.createPerson(personObject)
+				.then(newPerson =>
+					console.log(newPerson))
 		} else
 			alert(`You have given an empty name`)
 	}
