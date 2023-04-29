@@ -17,48 +17,53 @@ import phonebook from './services/phonebook'
 		return <button onClick={deletePerson}>delete</button>
 	}
 
-	const Person = ({person, newFilter, persons, setPersons, setNotification}) => {
-	if (person && newFilter.length <= 0)
-		return <li>{person.name} {person.number} <DeletePerson personDel={person} persons={persons} setPersons={setPersons} setNotification={setNotification}></DeletePerson></li>
-	if (person && person.name.toLowerCase().includes(newFilter.toLowerCase()))
-		return <li>{person.name} {person.number} <DeletePerson personDel={person} persons={persons} setPersons={setPersons} setNotification={setNotification}></DeletePerson></li>
-	}
-
 	const Filter = ({newFilter, handleFilter}) => {
-	return (<div>
-		filter shown with <input 
-			value={newFilter}
-			onChange={handleFilter}/>
-		</div>)
+		return (<div>
+			filter shown with <input 
+				value={newFilter}
+				onChange={handleFilter}/>
+			</div>)
 	}
 
 	const PersonForm = ({addContact, newName, handleNameChange, newNumber, handleNumber}) => {
-	return (
-	<form onSubmit={addContact}>
-	<div>
-		name: <input 
-		 value={newName}
-		 onChange={handleNameChange}/>
-	</div>
-	<div>
-		number: <input
-			value={newNumber}
-			onChange={handleNumber}/>
-	</div>
-	<div>
-		<button type="submit">add</button>
-	</div>
-	</form>
+		return (
+		<form onSubmit={addContact}>
+		<div>
+			name: <input 
+			 value={newName}
+			 onChange={handleNameChange}/>
+		</div>
+		<div>
+			number: <input
+				value={newNumber}
+				onChange={handleNumber}/>
+		</div>
+		<div>
+			<button type="submit">add</button>
+		</div>
+		</form>
+			)
+	}
+
+	const Person = ({person, newFilter, persons, setPersons, setNotification}) => {
+		if (!person || (newFilter.length > 0 && !person.name.toLowerCase().includes(newFilter.toLowerCase())))
+			return null
+		return (
+			<li>
+				{person.name} {person.number}
+				<DeletePerson personDel={person} persons={persons} setPersons={setPersons} setNotification={setNotification}></DeletePerson>
+			</li>
 		)
 	}
 
-	const Persons = ({id, persons, newFilter, setPersons, setNotification}) => {
-	return (
-		<ul>
-		{persons.map(person =>
-			<Person key={id += 1} person={person} newFilter={newFilter} persons={persons} setPersons={setPersons} setNotification={setNotification}/>)}
-		</ul>	
-		)
+	const Persons = ({persons, newFilter, setPersons, setNotification}) => {
+		let id = 0
+		return (
+			<ul>
+			{persons.map(person =>
+				<Person key={id += 1} person={person} newFilter={newFilter} persons={persons} setPersons={setPersons} setNotification={setNotification}/>)}
+			</ul>	
+			)
 	}
 
 	const Notification = ({newNotification}) => {
@@ -169,8 +174,6 @@ const App = () => {
 		setFilter(event.target.value)
 	}
 
-	let id = 0
-
 	return (
 	<div>
 		<h2>Phonebook</h2>
@@ -180,7 +183,7 @@ const App = () => {
 		<h3>Add a new</h3>
 		<PersonForm addContact={addContact} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumber={handleNumber} />
 		<h3>Numbers</h3>
-		<Persons id={id} persons={persons} setPersons={setPersons} newFilter={newFilter} setNotification={setNotification}/>
+		<Persons persons={persons} setPersons={setPersons} newFilter={newFilter} setNotification={setNotification}/>
 	</div>
 	)
 
