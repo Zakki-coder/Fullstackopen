@@ -12,7 +12,29 @@ const Find = ({findCountry, findCountryEvent}) => {
 	)
 }
 
-const ShowCountry = (showCountry, setShowCountry) => {
+const Weather = ({country}) => {
+	const [weather, setWeather] = useState(null)
+
+	if (country === null)
+		return null
+	if (!weather)
+		maiden_tiedot.getCurrentWeather(country.name.common).then(response => setWeather(response))
+	if (weather !== null) {
+		return (
+			<div>
+				<h2>Weather in {country.name.common}</h2>
+				temperature {weather.current.temp_c} Celcius
+				<br></br>
+				<img src={weather.current.condition.icon} style={{ width: '100px', height: 'auto'}}/>
+				<br></br>
+				wind {(weather.current.wind_kph * 1000/3600).toFixed(2)} m/s
+			</div>
+		)
+	}
+	return null
+}
+
+const ShowCountry = (showCountry) => {
 	if (showCountry === null)
 		return
 	const country = showCountry
@@ -30,27 +52,30 @@ const ShowCountry = (showCountry, setShowCountry) => {
 			{languages}
 		</ul>
 		<img src={country.flags.svg} style={{ width: '200px', height: 'auto' }}/>
+		<Weather country={showCountry}/>
 	</div>
 	)
 }
 
-const MatchingCountries = ({countries, findCountry, setFindCountry, showCountry, setShowCountry}) => {
-	if (countries === null || findCountry === null)
+const MatchingCountries = ({countries, findCountry, showCountry, setShowCountry}) => {
+	if (countries === null || findCountry === '')
 		return
 	if (showCountry !== null) {
 		return ShowCountry(showCountry, setShowCountry)
 	}
-	let lol = null
+
+	let names
+
 	const filterCountry = countries.filter(country => country.name.common.toLowerCase().includes(findCountry.toLowerCase()))
-	const names = filterCountry.map(country => {
-		return <li key={country.name.common}>{country.name.common}<button onClick={() => setShowCountry(country)}>show</button></li>
+	if (filterCountry.length === 1) {
+		return ShowCountry(filterCountry[0])
+	} else {
+		names = filterCountry.map(country => {
+			return <li key={country.name.common}>{country.name.common}<button onClick={() => setShowCountry(country)}>show</button></li>
 	})
+	}
 	if (names.length > 10)
 		return <div>Too many matches, specify another filter</div>
-	if (filterCountry.length === 1) {
-		// setShowCountry(filterCountry[0])
-		return ShowCountry(filterCountry[0])
-	}
 	return (
 		<div>
 			<ul>
@@ -82,8 +107,7 @@ function App() {
 	return (
 		<div>
 			<Find findCountry={findCountry} findCountryEvent={findCountryEvent}/>
-			<MatchingCountries key={id += 1} countries={countries} findCountry={findCountry} setFindCountry={setFindCountry} showCountry={showCountry} setShowCountry={setShowCountry}/>
-			{/* <ShowCountry setShowCountry={setShowCountry} showCountry={showCountry}/> */}
+			<MatchingCountries key={id += 1} countries={countries} findCountry={findCountry} showCountry={showCountry} setShowCountry={setShowCountry}/>
 		</div>
 	)
 }

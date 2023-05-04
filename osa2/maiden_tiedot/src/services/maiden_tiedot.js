@@ -7,6 +7,12 @@ const getAll = () => {
 	return request.then(response => response.data)
 }
 
+const getCurrentWeather = (city) => {
+	const request = axios.get(`http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_API_KEY}&q=${city}&aqi=no`)
+	return request.then(response => response.data)
+}
+
 export default {
-	getAll
+	getAll,
+	getCurrentWeather
 }
