@@ -137,13 +137,18 @@ const App = () => {
 					setNumber('')
 					updateNotification(`Added ${newPerson.name}`, setNotification)
 					})
-		} else
-			alert(`You have given an empty name`)
+		} 
+		// else
+		// 	alert(`You have given an empty name`)
 	}
 	else 
 	{
 		if (window.confirm(`${newName} is already added to phonebook, replace the old number with the new one?`))
 		{
+			if (!newNumber) {
+				alert("You must give a number")
+				return
+			}
 			const personWithOldNumber = persons.find(person => person.name === newName)
 			const personWithNewNumber =  {...personWithOldNumber, number: newNumber}
 			const newNameBk = newName
