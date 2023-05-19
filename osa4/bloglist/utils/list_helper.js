@@ -1,3 +1,5 @@
+const lodash = require('lodash/collection')
+
 const dummy = (blogs) => 1
 
 const totalLikes = (blogs) => {
@@ -20,8 +22,23 @@ const favoriteBlog = (blogs) => {
   return blog
 }
 
+//TODO test with empty array and with array including an empty object
+const mostBlogs = (blogs) => {
+  const mostBlogs =
+    lodash
+      .countBy(blogs, (blog) => blog.author)
+
+  const res = Object.keys(mostBlogs).reduce((mostSoFar, curr) => {
+    if (!mostSoFar || mostBlogs[mostSoFar] < mostBlogs[curr])
+      return curr
+    return mostSoFar
+  })
+  return { [res]: mostBlogs[res] }
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 }

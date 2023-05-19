@@ -10,6 +10,14 @@ test('dummy returns one', () => {
 
 const blogs = [
   {
+    _id: '5a422ba71b54a676234d17fb',
+    title: 'TDD harms architecture',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+    likes: 0,
+    __v: 0
+  },
+  {
     _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
     author: 'Michael Chan',
@@ -39,14 +47,6 @@ const blogs = [
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
     likes: 10,
-    __v: 0
-  },
-  {
-    _id: '5a422ba71b54a676234d17fb',
-    title: 'TDD harms architecture',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-    likes: 0,
     __v: 0
   },
   {
@@ -365,5 +365,13 @@ describe('Favorite blog', () => {
   test('Search favorite from list one blog with empty object', () => {
     const result = listHelper.favoriteBlog(blogsWithEmptyObject)
     expect(result).toEqual(favorite)
+  })
+
+  describe('Author with most blogs', () => {
+    const favorite = { 'Robert C. Martin': 3 }
+    test('Author with most blogs from bloglist', () => {
+      const result = listHelper.mostBlogs(blogs)
+      expect(result).toEqual(favorite)
+    })
   })
 })
