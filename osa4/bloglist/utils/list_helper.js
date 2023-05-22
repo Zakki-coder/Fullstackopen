@@ -51,11 +51,12 @@ const mostLikes = (blogs) => {
     lodash
       .groupBy(blogs, (blog) => blog.author)
 
+  console.log(groupedByAuthor)
   const mostLikedAuthor =
     Object
       .keys(groupedByAuthor)
       .map((key) => {
-        const likes = groupedByAuthor[key].reduce((accumulator, current) => {accumulator += current.likes}, 0)
+        const likes = groupedByAuthor[key].reduce((accumulator, current) => accumulator += current.likes, 0)
         return { 'author': key, 'likes': likes }
       })
       .reduce((mostLikes, curAuthor) => {
