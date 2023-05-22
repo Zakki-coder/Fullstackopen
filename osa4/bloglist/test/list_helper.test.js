@@ -131,6 +131,26 @@ const blogsWithEmptyObject = [
   },
 ]
 
+const blogsWithNoAuthor = [
+  {
+    _id: '5a422a851b54a676234d17f7',
+    title: 'React patterns',
+    author: null,
+    url: 'https://reactpatterns.com/',
+    likes: 7,
+    __v: 0
+  },
+  {
+  },
+  {
+    _id: '5a422b3a1b54a676234d17f9',
+    title: 'Canonical string reduction',
+    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    likes: 12,
+    __v: 0
+  },
+]
+
 describe('total likes', () => {
   //Test for empty also and null and undefined
   const listWithOneBlog = [
@@ -371,6 +391,56 @@ describe('Favorite blog', () => {
     const favorite = { 'Robert C. Martin': 3 }
     test('Author with most blogs from bloglist', () => {
       const result = listHelper.mostBlogs(blogs)
+      expect(result).toEqual(favorite)
+    })
+
+    test('Blogs without author', () => {
+      const result = listHelper.mostBlogs(blogsWithNoAuthor)
+      expect(result).toEqual( { 'undefined': 2 } )
+    })
+  })
+
+  describe('Author with most likes', () => {
+    const favorite = {
+      author: 'Edsger W. Dijkstra',
+      likes: 17
+    }
+
+    const blogsWithEmptyAndLikesMissing = [
+      {
+        _id: '5a422a851b54a676234d17f7',
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+        __v: 0
+      },
+      {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 5,
+        __v: 0
+      },
+      {
+      },
+      {
+        _id: '5a422b3a1b54a676234d17f9',
+        title: 'Canonical string reduction',
+        author: 'Edsger W. Dijkstra',
+        url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+        likes: 12,
+        __v: 0
+      },
+    ]
+
+    test('Author with most likes', () => {
+      const result = listHelper.mostLikes(blogs)
+      expect(result).toEqual(favorite)
+    })
+
+    test('Blogs with empty obj and row missing from obj', () => {
+      const result = listHelper.mostLikes(blogsWithEmptyAndLikesMissing)
       expect(result).toEqual(favorite)
     })
   })

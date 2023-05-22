@@ -13,27 +13,58 @@ const totalLikes = (blogs) => {
   return 0
 }
 
+const objectValidator = (obj) => {
+  return (
+    obj &&
+    Object.keys(obj).length > 0 &&
+    obj.constructor === Object
+  )
+}
+
 const favoriteBlog = (blogs) => {
   const blog = blogs.reduce((favBlog, curBlog) => {
-    if (!favBlog.likes || favBlog.likes < curBlog.likes)
-      return favBlog = curBlog
+    if (!objectValidator(favBlog) || favBlog.likes < curBlog.likes)
+      return curBlog
     return favBlog
   },{})
   return blog
 }
 
-//TODO test with empty array and with array including an empty object
 const mostBlogs = (blogs) => {
   const mostBlogs =
     lodash
       .countBy(blogs, (blog) => blog.author)
 
-  const res = Object.keys(mostBlogs).reduce((mostSoFar, curr) => {
-    if (!mostSoFar || mostBlogs[mostSoFar] < mostBlogs[curr])
-      return curr
-    return mostSoFar
-  })
+  const res =
+    Object
+      .keys(mostBlogs)
+      .reduce((mostSoFar, curr) => {
+        if (mostBlogs[mostSoFar] < mostBlogs[curr])
+          return curr
+        return mostSoFar
+      })
   return { [res]: mostBlogs[res] }
+}
+
+const mostLikes = (blogs) => {
+  const groupedByAuthor =
+    lodash
+      .groupBy(blogs, (blog) => blog.author)
+
+  const mostLikedAuthor =
+    Object
+      .keys(groupedByAuthor)
+      .map((key) => {
+        const likes = groupedByAuthor[key].reduce((accumulator, current) => {accumulator += current.likes}, 0)
+        return { 'author': key, 'likes': likes }
+      })
+      .reduce((mostLikes, curAuthor) => {
+        if (!objectValidator(mostLikes) && curAuthor.likes)
+          return curAuthor
+        return curAuthor.likes > mostLikes.likes ? curAuthor : mostLikes
+      }, {})
+
+  return (mostLikedAuthor)
 }
 
 module.exports = {
@@ -41,4 +72,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 }
