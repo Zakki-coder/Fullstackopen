@@ -51,7 +51,6 @@ const mostLikes = (blogs) => {
     lodash
       .groupBy(blogs, (blog) => blog.author)
 
-  console.log(groupedByAuthor)
   const mostLikedAuthor =
     Object
       .keys(groupedByAuthor)
