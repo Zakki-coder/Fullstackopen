@@ -127,9 +127,31 @@ describe('Let\'s test the REST', () => {
       expect(blog.id).toBeDefined()
       expect(blog._id).not.toBeDefined()
     })
-})
+  })
 
+  test.only('testing HTTP POST request', async () => {
+    const newPost = {
+      title: 'New blog',
+      author: 'Smart guy',
+      url: 'http://blog.smartguy.fi/smarblog',
+      likes: 3,
+    }
 
+    const blogsBefore = await api.get('/api/blogs')
+    const response = await api
+      .post('/api/blogs')
+      .send(newPost)
+      .expect(201)
+    const blogsAfter = await api.get('/api/blogs')
+    const blogsWithoutId = blogsAfter.body.map(blog => {
+      delete blog.id
+      return blog
+    })
+    delete response.body.id
+    expect(response.body).toEqual(newPost)
+    expect(blogsWithoutId).toContainEqual(newPost)
+    expect(blogsAfter.body).toHaveLength(blogsBefore.body.length + 1)
+  })
 })
 
 afterAll(async () => {
