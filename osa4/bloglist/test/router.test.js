@@ -129,7 +129,7 @@ describe('Let\'s test the REST', () => {
     })
   })
 
-  test.only('testing HTTP POST request', async () => {
+  test('testing HTTP POST request', async () => {
     const newPost = {
       title: 'New blog',
       author: 'Smart guy',
@@ -151,6 +151,49 @@ describe('Let\'s test the REST', () => {
     expect(response.body).toEqual(newPost)
     expect(blogsWithoutId).toContainEqual(newPost)
     expect(blogsAfter.body).toHaveLength(blogsBefore.body.length + 1)
+  })
+
+  test('If likes is without value, default should be zero', async () => {
+    const newPost = {
+      title: 'New blog',
+      author: 'Smart guy',
+      url: 'http://blog.smartguy.fi/smarblog',
+      likes: undefined
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newPost)
+      .expect(201)
+
+    expect(response.body['likes']).toEqual(0)
+
+  })
+
+  test('Title property missing', async() => {
+    const newPost = {
+      author: 'Smart guy',
+      url: 'http://blog.smartguy.fi/smarblog',
+      likes: 42
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newPost)
+      .expect(400)
+  })
+
+  test('Url property missing', async() => {
+    const newPost = {
+      title: 'Very important',
+      author: 'Smart guy',
+      likes: 42
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newPost)
+      .expect(400)
   })
 })
 
