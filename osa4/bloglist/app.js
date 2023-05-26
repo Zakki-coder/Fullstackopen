@@ -2,11 +2,12 @@ const config = require('./utils/config')
 const express = require('express')
 require('express-async-errors')
 const app = express()
-const notesRouter = require('./controllers/blogs')
+const blogsRouter = require('./controllers/blogs')
 const cors = require('cors')
 const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false) //What's this
+// mongoose.set('debug', true)
 
 const mongoUrl = config.MONGODB_URI
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true} )
@@ -20,6 +21,6 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true} )
 
 app.use(cors())
 app.use(express.json())
-app.use('/api/blogs', notesRouter)
+app.use('/api/blogs', blogsRouter)
 
 module.exports = app

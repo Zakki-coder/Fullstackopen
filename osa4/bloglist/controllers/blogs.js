@@ -1,4 +1,5 @@
 const blogsRouter = require('express').Router()
+const { identity } = require('lodash')
 const Blog = require('../models/bloglist')
 
 blogsRouter.get('/', async (request, response, next) => {
@@ -14,18 +15,25 @@ blogsRouter.get('/', async (request, response, next) => {
 blogsRouter.post('/', async (request, response, next) => {
   const blog = new Blog(request.body)
 
-  console.log('BLOGBLOG', blog)
-
   try {
     const res = await blog.save()
     response.status(201).json(res)
   } catch(exception) {
-    // console.log('EXCEPTION', exception)
     next(exception)
   }
 })
 
-//TODO Error handling middleware
+blogsRouter.delete('/:id', async (request, response, next) => {
+  try {
+    console.log({ id: request.params.id })
+    await Blog.findByIdAndRemove(request.params.id).exec()
+    // const res = await Blog.findByIdAndRemove(request.params.id).exec()
+    response.status(200).end()
+  } catch(exception) {
+    next(exception)
+  }
+})
+
 blogsRouter.use((err, req, res, next) => {
   if (err.message.includes('Title property missing'))
     res.status(400).send('Title property missing')
