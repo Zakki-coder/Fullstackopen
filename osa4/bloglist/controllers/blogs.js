@@ -23,11 +23,22 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 })
 
+blogsRouter.put('/:id', async(request, response, next) => {
+  const { title, author, url, likes } = request.body
+  try {
+    const res = await Blog.findByIdAndUpdate(
+      request.params.id,
+      { title, author, url, likes },
+      { new: true, runValidators: true, context: 'query', returnDocument: 'after' })
+    response.status(200).json(res)
+  } catch(exception) {
+    next(exception)
+  }
+})
+
 blogsRouter.delete('/:id', async (request, response, next) => {
   try {
-    console.log({ id: request.params.id })
     await Blog.findByIdAndRemove(request.params.id).exec()
-    // const res = await Blog.findByIdAndRemove(request.params.id).exec()
     response.status(200).end()
   } catch(exception) {
     next(exception)

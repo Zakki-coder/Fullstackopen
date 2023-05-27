@@ -196,7 +196,7 @@ describe('Let\'s test the REST', () => {
       .expect(400)
   })
 
-  test.only('Deletion of a blog', async() => {
+  test('Deletion of a blog', async() => {
     const deleteId = {
       _id: '5a422a851b54a676234d17f7',
       title: 'React patterns',
@@ -205,11 +205,38 @@ describe('Let\'s test the REST', () => {
       likes: 7,
       __v: 0
     }
-
+    const blogsBefore = await api.get('/api/blogs').expect(200)
     await api
       .delete(`/api/blogs/${deleteId._id}`)
       .expect(200)
-  }, 50000)
+    const blogsAfter = await api.get('/api/blogs').expect(200)
+    expect(blogsBefore.body.length).toBe(blogsAfter.body.length + 1)
+  })
+
+  test.only('Update blog', async () => {
+    const updatedBlog = {
+      _id: '5a422a851b54a676234d17f7',
+      title: 'Reakt Reakt',
+      author: 'Cha cha cha',
+      url: 'https://reactpatterns.com/',
+      likes: 10,
+      __v: 0
+    }
+
+    const allBlogsBefore = await api.get('/api/blogs')
+    const res = await api
+      .put(`/api/blogs/${updatedBlog._id}`)
+      .send(updatedBlog)
+    const allBlogsAfter = await api.get('/api/blogs')
+    updatedBlog.id = updatedBlog._id
+    delete updatedBlog._id
+    delete updatedBlog.__v
+    expect(res.status).toBe(200)
+    expect(res.body).toEqual(updatedBlog)
+    expect(allBlogsBefore.body.length).toBe(allBlogsAfter.body.length)
+    expect(allBlogsBefore.body).not.toContainEqual(updatedBlog)
+    expect(allBlogsAfter.body).toContainEqual(updatedBlog)
+  })
 })
 
 afterAll(async () => {
