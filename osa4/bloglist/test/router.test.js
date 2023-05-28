@@ -213,7 +213,7 @@ describe('Let\'s test the REST', () => {
     expect(blogsBefore.body.length).toBe(blogsAfter.body.length + 1)
   })
 
-  test.only('Update blog', async () => {
+  test('Update blog', async () => {
     const updatedBlog = {
       _id: '5a422a851b54a676234d17f7',
       title: 'Reakt Reakt',

@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const PORT = process.env.PORT || 3003
-console.log('PORT IS SWEET AND STRONG', PORT)
 
 const MONGODB_URI = process.env.NODE_ENV === 'test'
   ? process.env.TEST_MONGODB_URI

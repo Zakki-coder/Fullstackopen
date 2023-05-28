@@ -1,5 +1,4 @@
 const blogsRouter = require('express').Router()
-const { identity } = require('lodash')
 const Blog = require('../models/bloglist')
 
 blogsRouter.get('/', async (request, response, next) => {
