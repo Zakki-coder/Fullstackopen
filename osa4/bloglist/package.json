@@ -8,7 +8,8 @@
     "lol": "NODE_ENV=test nodemon index.js",
     "dev": "NODE_ENV=development nodemon --inspect index.js",
     "lint": "eslint .",
-    "test": "NODE_ENV=test jest --verbose --runInBand"
+    "test": "NODE_ENV=test jest --verbose --runInBand",
+    "silent-test": "NODE_ENV=test jest --runInBand"
   },
   "author": "jniemine",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "lodash": "^4.17.21",
     "mongod": "^2.0.0",
     "mongoose": "^7.1.1",
+    "mongoose-unique-validator": "^4.0.0",
     "nodemon": "^2.0.22"
   },
   "devDependencies": {
