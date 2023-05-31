@@ -5,14 +5,15 @@ const userHelper = require('../utils/user_helper')
 
 userRouter.get('/', async(request, response, next) => {
   try {
-    const allUsers = await User.find({})
+    const allUsers = await User
+      .find({})
+      .populate('blogs', { url: 1, title: 1, author: 1, id: 1 })
     response.status(200).json(allUsers)
   } catch(exception) {
     next(exception)
   }
 })
 
-//TODO Do I need to allow user without NAME????????
 userRouter.post('/', async(request, response, next) => {
   const { username, name, password } = request.body
   userHelper.validateUser(request, response)

@@ -1,14 +1,18 @@
 const mongoose = require('mongoose')
 
 const blogSchema = new mongoose.Schema({
+  url: {
+    type: String,
+    required: [true, 'Url property missing']
+  },
   title: {
     type: String,
     required: [true, 'Title property missing']
   },
   author: String,
-  url: {
-    type: String,
-    required: [true, 'Url property missing']
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
   likes: {
     type: Number,

@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "I have so much to say",
-  "author": "Important person",
-  "url": "http://www.important.com",
+  "title": "Ranting sequel",
+  "author": "Wise person",
+  "url": "http://www.wisdom.com",
   "likes": 0
 }
