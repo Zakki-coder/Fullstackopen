@@ -1,4 +1,6 @@
 const blogsRouter = require('express').Router()
+const tokenValidator = require('../utils/token_validator')
+const jwt = require('jsonwebtoken')
 const Blog = require('../models/bloglist')
 const User = require('../models/user')
 
@@ -13,12 +15,17 @@ blogsRouter.get('/', async (request, response, next) => {
 })
 
 blogsRouter.post('/', async (request, response, next) => {
-  const randomUser = await User.findOne()
-  if (randomUser)
-    request.body.user = randomUser._id
-
+  const token = tokenValidator(request)
+  const verifiedUser = jwt.verify(token, process.env.SECRET)
+  if (!token || !verifiedUser)
+    return response.status(401).json({
+      error: 'token invalid'
+    })
+  const randomUser = await User.findById(verifiedUser.id)
+  if (!randomUser)
+    return response.status(400).json({ error: 'Could not find user for valid token' })
+  request.body.user = randomUser._id
   const blog = new Blog(request.body)
-  //Put on own try catch
   randomUser.blogs = randomUser.blogs.concat(blog._id)
   try {
     await randomUser.save()

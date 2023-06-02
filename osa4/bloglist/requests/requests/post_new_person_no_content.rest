@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/users
 Content-Type: application/json
+Authorization: bearer 123
 
 {
-  "name": "Krematio",
-  "username": "Heikki",
+  "name": "Krematorio",
+  "username": "Purkka",
   "password": "kuokkajussi"
 }
