@@ -1,5 +1,4 @@
 const blogsRouter = require('express').Router()
-const tokenValidator = require('../utils/token_validator')
 const jwt = require('jsonwebtoken')
 const Blog = require('../models/bloglist')
 const User = require('../models/user')
@@ -15,7 +14,7 @@ blogsRouter.get('/', async (request, response, next) => {
 })
 
 blogsRouter.post('/', async (request, response, next) => {
-  const token = tokenValidator(request)
+  const token = request.token
   const verifiedUser = jwt.verify(token, process.env.SECRET)
   if (!token || !verifiedUser)
     return response.status(401).json({
@@ -65,8 +64,10 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 blogsRouter.use((err, req, res, next) => {
   if (err.message.includes('Title property missing'))
     res.status(400).send('Title property missing')
-  if (err.message.includes('Url property missing'))
+  else if (err.message.includes('Url property missing'))
     res.status(400).send('Url property missing')
+  else if (err.name === 'JsonWebTokenError')
+    res.status(401).json({ error: 'token missing or invalid' })
   next(err)
 })
 

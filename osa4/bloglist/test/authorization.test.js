@@ -25,24 +25,45 @@ beforeEach(async () => {
   loggedInUser = await api
     .post('/api/login')
     .send(newUser)
-  const newBlog = {
-    'url': 'www.blogging.com',
-    'title': 'Bloggin bout bloggin',
-    'author': 'VIP Kalle',
-    'likes': 0
-  }
-  const blog = await api
-    .post('/api/blogs')
-    .set('Authorization', 'Bearer ' + loggedInUser.body.Authorization)
-    .send(newBlog)
-  console.log('STATUS', blog.body)
   //Move above into test
   //Test with incorrect token and missing token also
 })
 
+function subObjMatch(subObj, targetObj) {
+  return Object.entries(subObj).every(([key, val]) => {
+    return Object.keys(targetObj).includes(key) && targetObj[key] === subObj[key]
+  })
+}
+
 describe('Testing authorization with tokens', () => {
-  test('Add blog ', () => {
-    console.log('Hello from test')
+  test('Add blog ', async () => {
+    const newBlog = {
+      'url': 'www.blogging.com',
+      'title': 'Bloggin bout bloggin',
+      'author': 'VIP Kalle',
+      'likes': 0
+    }
+    const blog = await api
+      .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + loggedInUser.body.Authorization)
+      .send(newBlog)
+    expect(subObjMatch(newBlog, blog.body)).toBe(true)
+    expect(blog.status).toEqual(201)
+  })
+  test('Add blog incorrect Auth', async () => {
+    const auth = 123
+    const newBlog = {
+      'url': 'www.blogging.com',
+      'title': 'Bloggin bout bloggin',
+      'author': 'VIP Kalle',
+      'likes': 0
+    }
+    const blog = await api
+      .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + auth)
+      .send(newBlog)
+    expect(subObjMatch(newBlog, blog.body)).toBe(false)
+    expect(blog.status).toBe(401)
   })
 })
 
