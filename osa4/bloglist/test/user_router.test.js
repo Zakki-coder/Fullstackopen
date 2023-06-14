@@ -1,4 +1,5 @@
 const supertest = require('supertest')
+const mongoose = require('mongoose')
 const app = require('../app')
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
@@ -194,4 +195,8 @@ describe('Creation of user', () => {
     expect(usersBefore.body).toHaveLength(usersAfter.body.length)
   })
 
+})
+
+afterAll(async () => {
+  await mongoose.connection.close()
 })

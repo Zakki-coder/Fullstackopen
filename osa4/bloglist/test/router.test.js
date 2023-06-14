@@ -2,8 +2,195 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/bloglist')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
+
+let token
+
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  await User.deleteMany({})
+
+  const newUser = new User
+  ({
+    username: 'Pekka',
+    name: 'Pekka',
+    passwordHash: 'hash123',
+  })
+  newUser.save()
+  token = jwt.sign({ username: 'Pekka', id: newUser._id }, process.env.SECRET)
+  for (let i = 0; i < blogs.length; i++) {
+    let blogObject = new Blog(blogs[i])
+    await blogObject.save()
+  }
+})
+
+describe('Let\'s test the REST', () => {
+  test('blogs are returned as json', async() => {
+    const response =
+      await api
+        .get('/api/blogs')
+        .set('Authorization', 'Bearer ' + token)
+
+    expect(response.status).toBe(200)
+    expect(response.type).toMatch(/application\/json/)
+    expect(response.body.sort()).toEqual(blogsCompare.sort())
+  })
+
+  test('blog id should be renamed from _id to id', async () => {
+    const response =
+      await api
+        .get('/api/blogs')
+        .set('Authorization', 'Bearer ' + token)
+
+    response.body.forEach(blog => {
+      expect(blog.id).toBeDefined()
+      expect(blog._id).not.toBeDefined()
+    })
+  })
+
+  test('testing HTTP POST request', async () => {
+    const newPost = {
+      title: 'New blog',
+      author: 'Smart guy',
+      url: 'http://blog.smartguy.fi/smarblog',
+      likes: 3,
+    }
+
+    const blogsBefore =
+      await api
+        .get('/api/blogs')
+        .set('Authorization', 'Bearer ' + token)
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + token)
+      .send(newPost)
+      .expect(201)
+    const blogsAfter =
+      await api
+        .get('/api/blogs')
+        .set('Authorization', 'Bearer ' + token)
+    const blogsWithoutId = blogsAfter.body.map(blog => {
+      delete blog.id
+      delete blog.user
+      return blog
+    })
+    delete response.body.id
+    delete response.body.user
+    expect(response.body).toEqual(newPost)
+    expect(blogsWithoutId).toContainEqual(newPost)
+    expect(blogsAfter.body.length).toBe(blogsBefore.body.length + 1)
+  })
+
+  test('If likes is without value, default should be zero', async () => {
+    const newPost = {
+      title: 'New blog',
+      author: 'Smart guy',
+      url: 'http://blog.smartguy.fi/smarblog',
+      likes: undefined
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + token)
+      .send(newPost)
+      .expect(201)
+
+    expect(response.body['likes']).toEqual(0)
+
+  })
+
+  test('Title property missing', async() => {
+    const newPost = {
+      author: 'Smart guy',
+      url: 'http://blog.smartguy.fi/smarblog',
+      likes: 42
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + token)
+      .send(newPost)
+      .expect(400)
+  })
+
+  test('Url property missing', async() => {
+    const newPost = {
+      title: 'Very important',
+      author: 'Smart guy',
+      likes: 42
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + token)
+      .send(newPost)
+      .expect(400)
+  })
+
+  test('Deletion of a blog', async() => {
+    const deleteId = {
+      _id: '5a422a851b54a676234d17f7',
+      title: 'React patterns',
+      author: 'Michael Chan',
+      url: 'https://reactpatterns.com/',
+      likes: 7,
+      __v: 0
+    }
+    const blogsBefore =
+      await api
+        .get('/api/blogs').expect(200)
+        .set('Authorization', 'Bearer ' + token)
+    await api
+      .delete(`/api/blogs/${deleteId._id}`)
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+    const blogsAfter =
+        await api
+          .get('/api/blogs').expect(200)
+          .set('Authorization', 'Bearer ' + token)
+    expect(blogsBefore.body.length).toBe(blogsAfter.body.length + 1)
+  })
+
+  test('Update blog', async () => {
+    const updatedBlog = {
+      _id: '5a422a851b54a676234d17f7',
+      title: 'Reakt Reakt',
+      author: 'Cha cha cha',
+      url: 'https://reactpatterns.com/',
+      likes: 10,
+      __v: 0
+    }
+
+    const allBlogsBefore =
+      await api
+        .get('/api/blogs')
+        .set('Authorization', 'Bearer ' + token)
+    const res =
+      await api
+        .put(`/api/blogs/${updatedBlog._id}`)
+        .set('Authorization', 'Bearer ' + token)
+        .send(updatedBlog)
+    const allBlogsAfter =
+      await api
+        .get('/api/blogs')
+        .set('Authorization', 'Bearer ' + token)
+    updatedBlog.id = updatedBlog._id
+    delete updatedBlog._id
+    delete updatedBlog.__v
+    expect(res.status).toBe(200)
+    expect(res.body).toEqual(updatedBlog)
+    expect(allBlogsBefore.body.length).toBe(allBlogsAfter.body.length)
+    expect(allBlogsBefore.body).not.toContainEqual(updatedBlog)
+    expect(allBlogsAfter.body).toContainEqual(updatedBlog)
+  })
+})
+
+afterAll(async () => {
+  await mongoose.connection.close()
+})
 
 const blogs = [
   {
@@ -101,144 +288,3 @@ const blogsCompare = [
   },
 ]
 
-beforeEach(async () => {
-  await Blog.deleteMany({})
-
-  for (let i = 0; i < blogs.length; i++) {
-    let blogObject = new Blog(blogs[i])
-    await blogObject.save()
-  }
-  // await Blog.insertMany(blogs)
-})
-
-describe('Let\'s test the REST', () => {
-  test('blogs are returned as json', async() => {
-    const response = await api.get('/api/blogs')
-
-    expect(response.status).toBe(200)
-    expect(response.type).toMatch(/application\/json/)
-    expect(response.body.sort()).toEqual(blogsCompare.sort())
-  })
-
-  test('blog id should be renamed from _id to id', async () => {
-    const response = await api.get('/api/blogs')
-
-    response.body.forEach(blog => {
-      expect(blog.id).toBeDefined()
-      expect(blog._id).not.toBeDefined()
-    })
-  })
-
-  test('testing HTTP POST request', async () => {
-    const newPost = {
-      title: 'New blog',
-      author: 'Smart guy',
-      url: 'http://blog.smartguy.fi/smarblog',
-      likes: 3,
-    }
-
-    const blogsBefore = await api.get('/api/blogs')
-    const response = await api
-      .post('/api/blogs')
-      .send(newPost)
-      .expect(201)
-    const blogsAfter = await api.get('/api/blogs')
-    const blogsWithoutId = blogsAfter.body.map(blog => {
-      delete blog.id
-      return blog
-    })
-    delete response.body.id
-    expect(response.body).toEqual(newPost)
-    expect(blogsWithoutId).toContainEqual(newPost)
-    expect(blogsAfter.body).toHaveLength(blogsBefore.body.length + 1)
-  })
-
-  test('If likes is without value, default should be zero', async () => {
-    const newPost = {
-      title: 'New blog',
-      author: 'Smart guy',
-      url: 'http://blog.smartguy.fi/smarblog',
-      likes: undefined
-    }
-
-    const response = await api
-      .post('/api/blogs')
-      .send(newPost)
-      .expect(201)
-
-    expect(response.body['likes']).toEqual(0)
-
-  })
-
-  test('Title property missing', async() => {
-    const newPost = {
-      author: 'Smart guy',
-      url: 'http://blog.smartguy.fi/smarblog',
-      likes: 42
-    }
-
-    await api
-      .post('/api/blogs')
-      .send(newPost)
-      .expect(400)
-  })
-
-  test('Url property missing', async() => {
-    const newPost = {
-      title: 'Very important',
-      author: 'Smart guy',
-      likes: 42
-    }
-
-    await api
-      .post('/api/blogs')
-      .send(newPost)
-      .expect(400)
-  })
-
-  test('Deletion of a blog', async() => {
-    const deleteId = {
-      _id: '5a422a851b54a676234d17f7',
-      title: 'React patterns',
-      author: 'Michael Chan',
-      url: 'https://reactpatterns.com/',
-      likes: 7,
-      __v: 0
-    }
-    const blogsBefore = await api.get('/api/blogs').expect(200)
-    await api
-      .delete(`/api/blogs/${deleteId._id}`)
-      .expect(200)
-    const blogsAfter = await api.get('/api/blogs').expect(200)
-    expect(blogsBefore.body.length).toBe(blogsAfter.body.length + 1)
-  })
-
-  test('Update blog', async () => {
-    const updatedBlog = {
-      _id: '5a422a851b54a676234d17f7',
-      title: 'Reakt Reakt',
-      author: 'Cha cha cha',
-      url: 'https://reactpatterns.com/',
-      likes: 10,
-      __v: 0
-    }
-
-    const allBlogsBefore = await api.get('/api/blogs')
-    const res = await api
-      .put(`/api/blogs/${updatedBlog._id}`)
-      .send(updatedBlog)
-    const allBlogsAfter = await api.get('/api/blogs')
-    updatedBlog.id = updatedBlog._id
-    delete updatedBlog._id
-    delete updatedBlog.__v
-    expect(res.status).toBe(200)
-    expect(res.body).toEqual(updatedBlog)
-    expect(allBlogsBefore.body.length).toBe(allBlogsAfter.body.length)
-    expect(allBlogsBefore.body).not.toContainEqual(updatedBlog)
-    expect(allBlogsAfter.body).toContainEqual(updatedBlog)
-  })
-})
-
-afterAll(async () => {
-  await mongoose.connection.close()
-})

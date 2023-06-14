@@ -1,5 +1,6 @@
 const listHelper = require('../utils/list_helper')
-// const reverse = require('../utils/for_testing').reverse
+const mongoose = require('mongoose')
+const User = require('../models/user')
 
 test('dummy returns one', () => {
   const blogs = []
@@ -444,4 +445,8 @@ describe('Favorite blog', () => {
       expect(result).toEqual(favorite)
     })
   })
+})
+
+afterAll(async () => {
+  await mongoose.connection.close()
 })

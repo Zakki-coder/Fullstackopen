@@ -33,7 +33,6 @@ userRouter.post('/', async(request, response, next) => {
 })
 
 userRouter.use('/', (err, request, response, next) => {
-  console.log(err.message)
   if (err.message.match(/(\bPath `username` is required\b)/))
     response.status(400).json(err.message)
   if (err.message.match(/(\bPath `name` is required\b)/))

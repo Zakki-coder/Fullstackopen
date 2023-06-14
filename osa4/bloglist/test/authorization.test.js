@@ -1,4 +1,5 @@
 const supertest = require('supertest')
+const mongoose = require('mongoose')
 const app = require('../app')
 const Blog = require('../models/bloglist')
 const User = require('../models/user')
@@ -67,3 +68,6 @@ describe('Testing authorization with tokens', () => {
   })
 })
 
+afterAll(async () => {
+  await mongoose.connection.close()
+})
