@@ -8,21 +8,31 @@ const jwt = require('jsonwebtoken')
 const api = supertest(app)
 
 let token
+let wrongUser
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await User.deleteMany({})
 
+  wrongUser = new User
+  ({
+    username: 'Hermanni',
+    name: 'Hermanni',
+    passwordHash: 'hash321'
+  })
+  await wrongUser.save()
+  wrongUser.token = jwt.sign({ username: 'Hermanni', id: wrongUser._id }, process.env.SECRET)
   const newUser = new User
   ({
     username: 'Pekka',
     name: 'Pekka',
     passwordHash: 'hash123',
   })
-  newUser.save()
+  await newUser.save()
   token = jwt.sign({ username: 'Pekka', id: newUser._id }, process.env.SECRET)
   for (let i = 0; i < blogs.length; i++) {
     let blogObject = new Blog(blogs[i])
+    blogObject.user = newUser._id
     await blogObject.save()
   }
 })
@@ -152,6 +162,30 @@ describe('Let\'s test the REST', () => {
           .get('/api/blogs').expect(200)
           .set('Authorization', 'Bearer ' + token)
     expect(blogsBefore.body.length).toBe(blogsAfter.body.length + 1)
+  })
+
+  test('Deletion of a blog, wrong user\'s token', async() => {
+    const deleteId = {
+      _id: '5a422a851b54a676234d17f7',
+      title: 'React patterns',
+      author: 'Michael Chan',
+      url: 'https://reactpatterns.com/',
+      likes: 7,
+      __v: 0
+    }
+    const blogsBefore =
+      await api
+        .get('/api/blogs').expect(200)
+        .set('Authorization', 'Bearer ' + wrongUser.token)
+    await api
+      .delete(`/api/blogs/${deleteId._id}`)
+      .set('Authorization', 'Bearer ' + wrongUser.token)
+      .expect(401)
+    const blogsAfter =
+        await api
+          .get('/api/blogs').expect(200)
+          .set('Authorization', 'Bearer ' + wrongUser.token)
+    expect(blogsBefore.body.length).toBe(blogsAfter.body.length)
   })
 
   test('Update blog', async () => {

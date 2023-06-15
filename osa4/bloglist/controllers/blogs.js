@@ -13,17 +13,23 @@ blogsRouter.get('/', async (request, response, next) => {
   }
 })
 
-blogsRouter.post('/', async (request, response, next) => {
-  const token = request.token
-  const verifiedUser = jwt.verify(token, process.env.SECRET)
-  if (!token || !verifiedUser)
-    return response.status(401).json({
-      error: 'token invalid'
-    })
-  const randomUser = await User.findById(verifiedUser.id)
-  if (!randomUser)
-    return response.status(400).json({ error: 'Could not find user for valid token' })
-  request.body.user = randomUser._id
+const middleware = {
+  authenticate: async(request, response, next) => {
+    const token = request.token
+    const verifiedUser = jwt.verify(token, process.env.SECRET)
+    if (!token || !verifiedUser)
+      return response.status(401).json({
+        error: 'token invalid'
+      })
+    const randomUser = await User.findById(verifiedUser.id)
+    if (!randomUser)
+      return response.status(400).json({ error: 'Could not find user for valid token' })
+    request.tokenUserId = verifiedUser.id
+    next()
+  }
+}
+
+blogsRouter.post('/', middleware.authenticate, async (request, response, next) => {
   const blog = new Blog(request.body)
   randomUser.blogs = randomUser.blogs.concat(blog._id)
   try {
@@ -52,7 +58,10 @@ blogsRouter.put('/:id', async(request, response, next) => {
   }
 })
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete('/:id', [middleware.authenticate], async (request, response, next) => {
+  const blog = await Blog.findById(request.params.id)
+  if (!blog.user || blog.user.toString() !== request.tokenUserId.toString())
+    return response.status(401).json({ error: 'Unauthorized delete' })
   try {
     await Blog.findByIdAndRemove(request.params.id).exec()
     response.status(200).end()
