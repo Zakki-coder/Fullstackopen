@@ -164,6 +164,53 @@ describe('Let\'s test the REST', () => {
     expect(blogsBefore.body.length).toBe(blogsAfter.body.length + 1)
   })
 
+  test('Deletion of a blog without Authorization header', async() => {
+    const deleteId = {
+      _id: '5a422a851b54a676234d17f7',
+      title: 'React patterns',
+      author: 'Michael Chan',
+      url: 'https://reactpatterns.com/',
+      likes: 7,
+      __v: 0
+    }
+    const blogsBefore =
+      await api
+        .get('/api/blogs').expect(200)
+        .set('Authorization', 'Bearer ' + token)
+    await api
+      .delete(`/api/blogs/${deleteId._id}`)
+      .expect(401)
+    const blogsAfter =
+        await api
+          .get('/api/blogs').expect(200)
+          .set('Authorization', 'Bearer ' + token)
+    expect(blogsBefore.body.length).toBe(blogsAfter.body.length)
+  })
+
+  test('Deletion of a blog without token', async() => {
+    const deleteId = {
+      _id: '5a422a851b54a676234d17f7',
+      title: 'React patterns',
+      author: 'Michael Chan',
+      url: 'https://reactpatterns.com/',
+      likes: 7,
+      __v: 0
+    }
+    const blogsBefore =
+      await api
+        .get('/api/blogs').expect(200)
+        .set('Authorization', 'Bearer ' + token)
+    await api
+      .delete(`/api/blogs/${deleteId._id}`)
+      .set('Authorization', 'Bearer ')
+      .expect(401)
+    const blogsAfter =
+        await api
+          .get('/api/blogs').expect(200)
+          .set('Authorization', 'Bearer ' + token)
+    expect(blogsBefore.body.length).toBe(blogsAfter.body.length)
+  })
+
   test('Deletion of a blog, wrong user\'s token', async() => {
     const deleteId = {
       _id: '5a422a851b54a676234d17f7',
