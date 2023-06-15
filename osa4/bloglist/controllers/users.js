@@ -23,7 +23,6 @@ userRouter.post('/', async(request, response, next) => {
     name,
     passwordHash,
   })
-  // console.log(newUser)
   try {
     const user = await newUser.save()
     response.status(201).json(user)

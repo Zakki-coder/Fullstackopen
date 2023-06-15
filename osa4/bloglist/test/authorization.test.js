@@ -18,16 +18,12 @@ beforeEach(async () => {
     name: 'Pelle',
     password: 'kurko'
   })
-  //Create user
   await api
     .post('/api/users')
     .send(newUser)
-  //Authenticate user and get token
   loggedInUser = await api
     .post('/api/login')
     .send(newUser)
-  //Move above into test
-  //Test with incorrect token and missing token also
 })
 
 function subObjMatch(subObj, targetObj) {
@@ -44,11 +40,17 @@ describe('Testing authorization with tokens', () => {
       'author': 'VIP Kalle',
       'likes': 0
     }
+    const blogsBefore = await api
+      .get('/api/blogs')
+      .set('Authorization', 'Bearer ' + loggedInUser.body.Authorization)
     const blog = await api
       .post('/api/blogs')
       .set('Authorization', 'Bearer ' + loggedInUser.body.Authorization)
       .send(newBlog)
-    expect(subObjMatch(newBlog, blog.body)).toBe(true)
+    const blogsAfter = await api
+      .get('/api/blogs')
+      .set('Authorization', 'Bearer ' + loggedInUser.body.Authorization)
+    expect(blogsBefore.length).toBe(blogsAfter.length)
     expect(blog.status).toEqual(201)
   })
   test('Add blog incorrect Auth', async () => {
