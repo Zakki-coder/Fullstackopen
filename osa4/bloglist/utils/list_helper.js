@@ -1,6 +1,6 @@
 const lodash = require('lodash/collection')
 
-const dummy = (blogs) => 1
+const dummy = () => 1
 
 const totalLikes = (blogs) => {
   const sum = (accumulator, current) => {

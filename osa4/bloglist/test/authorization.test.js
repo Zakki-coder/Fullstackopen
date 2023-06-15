@@ -27,7 +27,7 @@ beforeEach(async () => {
 })
 
 function subObjMatch(subObj, targetObj) {
-  return Object.entries(subObj).every(([key, val]) => {
+  return Object.entries(subObj).every(([key]) => {
     return Object.keys(targetObj).includes(key) && targetObj[key] === subObj[key]
   })
 }

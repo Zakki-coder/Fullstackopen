@@ -39,8 +39,6 @@ describe('Get all users', () => {
 })
 
 describe('Creation of user', () => {
-  const minLen = 3
-
   test('Creation of a valid user', async () => {
     const usersBefore = await api
       .get('/api/users')
