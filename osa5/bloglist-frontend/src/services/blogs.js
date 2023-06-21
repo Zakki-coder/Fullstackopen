@@ -1,8 +1,19 @@
 import axios from 'axios'
 const baseUrl = '/api/blogs'
 
+const authorize = () => {
+  const config = 
+    {
+      headers: { Authorization: `Bearer ${JSON.parse(window.localStorage.getItem('loggedBlogappUser'))}` }
+    }
+  return config
+}
+
 const getAll = () => {
-  const request = axios.get(baseUrl)
+  const config = authorize()
+  const request =
+    axios
+    .get(baseUrl, config)
   return request.then(response => response.data)
 }
 
