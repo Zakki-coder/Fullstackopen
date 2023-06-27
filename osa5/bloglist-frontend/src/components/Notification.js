@@ -7,8 +7,8 @@ const Notification = ({ message, setNotification}) => {
   }, 5000)
 
   return (
-    <div className='Notification'>
-      <h2>{message}</h2>
+    <div>
+      <h2 className="notification">{message}</h2>
     </div>
   )
 }

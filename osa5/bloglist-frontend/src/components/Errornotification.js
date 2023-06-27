@@ -8,7 +8,7 @@ const ErrorNotification = ({ message, setError }) => {
 
   return (
     <div>
-      <h2>{message}</h2>
+      <h2 className="errornotification">{message}</h2>
     </div>
   )
 }
