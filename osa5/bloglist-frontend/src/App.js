@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Login from './components/Login'
@@ -13,12 +12,25 @@ const App = () => {
     password: '',
   })
   const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState(null)
+  const [errorMessage, setError] = useState(null)
 
   useEffect(() => {
-      if (user)
+    try {
+      const tokenStr = window.localStorage.getItem('loggedBlogappUser')
+      const loggedUser = JSON.parse(tokenStr)
+      setUser(loggedUser)
+    } catch (exception) {
+      console.log(exception)
+    }
+  }, [])
+
+  useEffect(() => {
+      if (user) {
         blogService.getAll().then(blogs =>
           setBlogs( blogs )
         )  
+      }
   }, [user])
 
   const handleLogin = async (event) => {
@@ -34,7 +46,7 @@ const App = () => {
       setUser(response)
       setCredentials({ username: '', password: '' })
     } catch (exception) {
-      console.log('Login failed', exception)
+      setError('wrong username or password')
     }
   }
 
@@ -45,14 +57,14 @@ const App = () => {
   }
 
   if (user)
-    return  (
+    return (
       <div>
-        <Bloglist blogs={blogs} handleLogout={handleLogout}/>
-        <Newblog />
+        <Bloglist handleLogout={handleLogout} notification={notification} setNotification={setNotification}/>
+        <Newblog blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
       </div>
     )
   return (
-     <Login userCredentials={userCredentials} handleLogin={handleLogin} setCredentials={setCredentials}/>
+     <Login userCredentials={userCredentials} handleLogin={handleLogin} setCredentials={setCredentials} setError={setError} errorMessage={errorMessage} />
   )
 }
 

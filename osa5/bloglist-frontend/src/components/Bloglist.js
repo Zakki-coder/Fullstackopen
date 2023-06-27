@@ -1,13 +1,11 @@
-import Blog from './Blog'
+import Notification from './Notification'
 
-const bloglist = ({ handleLogout, blogs }) => (
+const bloglist = ({ handleLogout, notification, setNotification }) => (
    <div>
      <h2>blogs</h2>
+      <Notification message={notification} setNotification={setNotification}/>
       {JSON.parse(window.localStorage.loggedUsername)} logged in
       <button onClick={handleLogout}>logout</button>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
   </div>
 )
 

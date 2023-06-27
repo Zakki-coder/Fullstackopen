@@ -1,6 +1,9 @@
-const login = ({ userCredentials, handleLogin, setCredentials }) => (
+import ErrorNotification from './Errornotification'
+
+const login = ({ userCredentials, handleLogin, setCredentials, errorMessage, setError }) => (
     <div>
       <h2>Login to application</h2>
+      <ErrorNotification message={errorMessage} setError={setError}/>
       <form onSubmit={handleLogin}>
         <div>
           username
