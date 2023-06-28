@@ -2,15 +2,15 @@ import { useState } from 'react'
 import Blog from './Blog'
 import blogService from '../services/blogs'
 
-const NewBlog = ({ blogs, setBlogs, setNotification}) => {
+const NewBlog = ({ blogFormRef, blogs, setBlogs, setNotification}) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const localBlogs = blogs
+  const localBlogs = blogs //Maybe this is not needed!!!!!!!!!!!!!
 
   const addBlog = async (event) => {
     event.preventDefault()
-    const newBlog = {
+    const newBlog = { //DELT THIS OR USE IT
       title: title,
       author: author,
       url: url
@@ -19,6 +19,7 @@ const NewBlog = ({ blogs, setBlogs, setNotification}) => {
       const response = await blogService.post(title, author, url)
       setBlogs([...blogs, response])
       setNotification(`a new blog ${title} by ${author} added`)
+      blogFormRef.current.toggleVisible()
     } catch(exception) {
       console.error('Posting of a new blog failed', exception)
     }

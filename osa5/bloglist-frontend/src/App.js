@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Login from './components/Login'
 import Bloglist from './components/Bloglist'
 import Newblog from './components/Newblog'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -14,6 +15,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
   const [errorMessage, setError] = useState(null)
+  const blogFormRef = useRef()
 
   useEffect(() => {
     try {
@@ -60,7 +62,9 @@ const App = () => {
     return (
       <div>
         <Bloglist handleLogout={handleLogout} notification={notification} setNotification={setNotification}/>
-        <Newblog blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
+      <Togglable buttonLabel='create blog' ref={blogFormRef}>
+        <Newblog blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} blogFormRef={blogFormRef}/>
+      </Togglable>
       </div>
     )
   return (
