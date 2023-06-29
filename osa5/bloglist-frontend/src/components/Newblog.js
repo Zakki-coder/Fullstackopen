@@ -57,11 +57,6 @@ const NewBlog = ({ blogFormRef, blogs, setBlogs, setNotification}) => {
   </div>
   <button type="submit">create</button>
   </form>
-  <div>
-      {localBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-  </div>
   </div>
   )
 }

@@ -30,5 +30,17 @@ const post = (title, author, url) => {
   return request.then(response => response.data)
 }
 
+const put = async(blog) => {
+  const config = authorize()
+  const url = `${baseUrl}/${blog.id}`
+  try {
+  const response = await axios
+    .put(url, blog, config)
+    return response
+  } catch(exception) {
+    console.error(exception)
+  }
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, post }
+export default { getAll, post, put }
