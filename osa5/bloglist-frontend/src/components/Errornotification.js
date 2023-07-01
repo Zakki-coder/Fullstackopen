@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const ErrorNotification = ({ message, setError }) => {
   if (!message)
     return null
@@ -13,5 +15,10 @@ const ErrorNotification = ({ message, setError }) => {
   )
 }
 
-  export default ErrorNotification
+ErrorNotification.propTypes = {
+  message: PropTypes.string.isRequired,
+  setError: PropTypes.func.isRequired
+}
+
+export default ErrorNotification
 

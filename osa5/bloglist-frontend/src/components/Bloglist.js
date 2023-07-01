@@ -1,6 +1,7 @@
 import Blog from './Blog'
+import PropTypes from 'prop-types'
 
-const bloglist = ({ blogs, setBlogs }) => {
+const Bloglist = ({ blogs, setBlogs }) => {
   const sortFunc = (a, b) => {
     if (a > b)
       return -1
@@ -9,11 +10,16 @@ const bloglist = ({ blogs, setBlogs }) => {
     return 0
   }
   return (
-  <div>
+    <div>
       {blogs.sort((a, b) => sortFunc(a.likes, b.likes)).map((blog, index) =>
         <Blog key={blog.id} blog={blog} index={index} allBlogs={blogs} setBlogs={setBlogs}/>
       )}
-  </div>
-)}
+    </div>
+  )}
 
-export default bloglist
+Bloglist.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired
+}
+
+export default Bloglist

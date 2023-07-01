@@ -1,31 +1,43 @@
 import ErrorNotification from './Errornotification'
+import PropTypes from 'prop-types'
 
-const login = ({ userCredentials, handleLogin, setCredentials, errorMessage, setError }) => (
-    <div>
-      <h2>Login to application</h2>
-      <ErrorNotification message={errorMessage} setError={setError}/>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-           <input
-           type="text"
-           value={userCredentials.username}
-           name="Username"
-           onChange={({ target }) => setCredentials({ ...userCredentials, username: target.value })}
-          />
-        </div>
-        <div>
-          password
-            <input
-              type="password"
-              value={userCredentials.password}
-              name="Password"
-              onChange={({ target }) => setCredentials({ ...userCredentials, password: target.value })}
-              />
-        </div>
-        <button type="submit">login</button>
-        </form>
-    </div>
+const Login = ({ userCredentials, handleLogin, setCredentials, errorMessage, setError }) => (
+  <div>
+    <h2>Login to application</h2>
+    <ErrorNotification message={errorMessage} setError={setError}/>
+    <form onSubmit={handleLogin}>
+      <div>
+        username
+        <input
+          type="text"
+          value={userCredentials.username}
+          name="Username"
+          onChange={({ target }) => setCredentials({ ...userCredentials, username: target.value })}
+        />
+      </div>
+      <div>
+      password
+        <input
+          type="password"
+          value={userCredentials.password}
+          name="Password"
+          onChange={({ target }) => setCredentials({ ...userCredentials, password: target.value })}
+        />
+      </div>
+      <button type="submit">login</button>
+    </form>
+  </div>
 )
 
-export default login
+Login.propTypes = {
+  userCredentials: PropTypes.shape({
+    username: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+  }),
+  handleLogin: PropTypes.func.isRequired,
+  setCredentials: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string.isRequired,
+  setError: PropTypes.func.isRequired
+}
+
+export default Login
