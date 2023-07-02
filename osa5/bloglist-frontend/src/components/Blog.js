@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 const Blog = ({ blog, index, allBlogs, setBlogs }) => {
   const [show, setShow] = useState(false)
   const [buttonLabel, setLabel] = useState('view')
-  let viewInfo
+  const viewInfo = { display: show ? '' : 'none' }
 
   const toggleShow = () => {
     const showInvert = !show
@@ -29,17 +29,31 @@ const Blog = ({ blog, index, allBlogs, setBlogs }) => {
     }
   }
 
-  viewInfo = { display: show ? '' : 'none' }
+  const addLike = async (event) => {
+    event.stopPropagation()
+    const newBlogs = [...allBlogs]
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
+    newBlogs[index] = updatedBlog
+    setBlogs(newBlogs)
+    try {
+      await Services.put(updatedBlog)
+    } catch(exception) {
+      console.error(exception)
+    }
+  }
+
   return (
     <div className='blog' onClick={toggleShow}>
       {blog.title} {blog.author}
       <button onClick={toggleShow}>{buttonLabel}</button>
-      <div style={viewInfo}>
+      {show &&
+      <div style={viewInfo} className='togglableContent'>
         <a href={`//${blog.url}`}>{blog.url}</a><br></br>
-        <Likes blog={blog} index={index} allBlogs={allBlogs} setBlogs={setBlogs}/>
+        <Likes blog={blog} addLike={addLike}/>
         {blog.user.username}<br></br>
         <button onClick={removeBlog}>remove</button>
       </div>
+      }
     </div>
   )
 }
