@@ -3,10 +3,6 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
-//Move into Like.test.js
-import Like from './Likes'
-//Same here
-import NewBlog from './Newblog'
 
 describe('Testing Blog component', () => {
   const blog = {
@@ -41,30 +37,5 @@ describe('Testing Blog component', () => {
     await user.click(button)
     screen.getByText(/https:\/\/kaivon.pohja.com/)
     screen.getByText(/1337/)
-  })
-
-  //Put this in Like.test.js
-  test('mocking like button' , async () => {
-    const user = userEvent.setup()
-    const mockFn = jest.fn()
-    render(
-      <Like blog={blog} addLike={mockFn} />
-    )
-    const likeButton = screen.getByText(/like/)
-    await user.click(likeButton)
-    await user.click(likeButton)
-    expect(mockFn.mock.calls).toHaveLength(2)
-  })
-
-  //Put in NewBlog.test.js
-  //({ blogFormRef, blogs, setBlogs, setNotification })
-  test('Test NewBlog form', async () => {
-    const setBlogsMock = jest.fn()
-    const setNotificationMock = jest.fn()
-    const { container } = render(
-      <NewBlog blogs={[blog]} setBlogs={setBlogsMock} setNotification={setNotificationMock}/>
-    )
-    screen.debug(container)
-
   })
 })

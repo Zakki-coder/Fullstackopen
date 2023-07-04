@@ -59,12 +59,28 @@ const App = () => {
     setUser(null)
   }
 
+  const addBlog = async(title, author, url) => {
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url
+    }
+    try {
+      const response = await blogService.post(newBlog)
+      setBlogs([...blogs, response])
+      setNotification(`a new blog ${title} by ${author} added`)
+      blogFormRef.current.toggleVisible()
+    } catch(exception) {
+      console.error('Posting of a new blog failed', exception)
+    }
+  }
+
   if (user)
     return (
       <div>
         <User handleLogout={handleLogout} notification={notification} setNotification={setNotification}/>
         <Togglable buttonLabel='create blog' ref={blogFormRef}>
-          <Newblog blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} blogFormRef={blogFormRef}/>
+          <Newblog addBlog={addBlog}/>
         </Togglable>
         <Bloglist blogs={blogs} setBlogs={setBlogs}/>
       </div>
