@@ -9,6 +9,7 @@ const Login = ({ userCredentials, handleLogin, setCredentials, errorMessage, set
       <div>
         username
         <input
+          id='username'
           type="text"
           value={userCredentials.username}
           name="Username"
@@ -18,13 +19,14 @@ const Login = ({ userCredentials, handleLogin, setCredentials, errorMessage, set
       <div>
       password
         <input
+          id='password'
           type="password"
           value={userCredentials.password}
           name="Password"
           onChange={({ target }) => setCredentials({ ...userCredentials, password: target.value })}
         />
       </div>
-      <button type="submit">login</button>
+      <button id='login-button' type="submit">login</button>
     </form>
   </div>
 )
