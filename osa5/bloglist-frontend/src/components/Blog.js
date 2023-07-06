@@ -45,7 +45,7 @@ const Blog = ({ blog, index, allBlogs, setBlogs }) => {
   return (
     <div className='blog' onClick={toggleShow}>
       {blog.title} {blog.author}
-      <button onClick={toggleShow}>{buttonLabel}</button>
+      <button id='view-button' onClick={toggleShow}>{buttonLabel}</button>
       {show &&
       <div style={viewInfo} className='togglableContent'>
         <a href={`//${blog.url}`}>{blog.url}</a><br></br>

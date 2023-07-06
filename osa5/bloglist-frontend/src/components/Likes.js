@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 const Likes = ({ blog, addLike }) => {
 
   return (
-    <div>
+    <div id='likes'>
       {blog.likes}
-      <button onClick={addLike}>like</button>
+      <button id='like-button' onClick={addLike}>like</button>
     </div>
   )
 }
