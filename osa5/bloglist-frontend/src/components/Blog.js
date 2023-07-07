@@ -7,6 +7,8 @@ const Blog = ({ blog, index, allBlogs, setBlogs }) => {
   const [show, setShow] = useState(false)
   const [buttonLabel, setLabel] = useState('view')
   const viewInfo = { display: show ? '' : 'none' }
+  const viewRemove =
+    { display: window.localStorage.loggedUsername === JSON.stringify(blog.user.username) ? '' : 'none' }
 
   const toggleShow = () => {
     const showInvert = !show
@@ -47,11 +49,11 @@ const Blog = ({ blog, index, allBlogs, setBlogs }) => {
       {blog.title} {blog.author}
       <button id='view-button' onClick={toggleShow}>{buttonLabel}</button>
       {show &&
-      <div style={viewInfo} className='togglableContent'>
+      <div id='blog-info' style={viewInfo} className='togglableContent'>
         <a href={`//${blog.url}`}>{blog.url}</a><br></br>
         <Likes blog={blog} addLike={addLike}/>
         {blog.user.username}<br></br>
-        <button onClick={removeBlog}>remove</button>
+        <button id='remove-button' style={viewRemove} onClick={removeBlog}>remove</button>
       </div>
       }
     </div>

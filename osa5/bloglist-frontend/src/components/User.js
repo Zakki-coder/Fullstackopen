@@ -6,7 +6,7 @@ const User = ({  handleLogout, notification, setNotification }) => (
     <h2>blogs</h2>
     <Notification message={notification} setNotification={setNotification}/>
     <p>{JSON.parse(window.localStorage.loggedUsername)} logged in
-      <button onClick={handleLogout}>logout</button>
+      <button id='logout-button' onClick={handleLogout}>logout</button>
     </p>
   </div>
 )

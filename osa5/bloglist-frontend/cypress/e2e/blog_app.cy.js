@@ -4,9 +4,17 @@ describe('Blog app', function() {
     name: 'Hessu Hopo',
     password: 'pluto'
   }
+
+  const wrongUser = {
+    username: 'Aku',
+    name: 'Aku Ankka',
+    password: 'tupuhupujalupu'
+  }
+
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
     cy.request('POST', 'http://localhost:3003/api/users', user)
+    cy.request('POST', 'http://localhost:3003/api/users', wrongUser)
     cy.visit('http://localhost:3000')
   })
 
@@ -69,11 +77,32 @@ describe('Blog app', function() {
         cy.get('#url').type(blog.url)
         cy.get('#create-button').click()
       })
-      it.only('It can be liked', function() {
+
+      it('It can be liked', function() {
         cy.get('#view-button').click()
         cy.get('#like-button').click()
         cy.get('#likes').then( block => {
           expect(block).to.contain('1')
+        })
+      })
+
+      it('It can\'t be deleted by wrong user', function() {
+        cy.get('#logout-button').click()
+        cy.get('#username').type(wrongUser.username)
+        cy.get('#password').type(wrongUser.password)
+        cy.get('#login-button').click()
+        cy.get('#view-button').click()
+        cy.get('#remove-button').should('not.be.visible')
+      })
+
+      it('It can be deleted by user who added the blog', function() {
+        cy.get('#view-button').click()
+        cy.get('#bloglist').should(bloglist => {
+          expect(bloglist).to.contain(`${blog.title} ${blog.author}`)
+        })
+        cy.get('#remove-button').click()
+        cy.get('#bloglist').should(bloglist => {
+          expect(bloglist).not.to.contain(`${blog.title} ${blog.author}`)
         })
       })
     })
