@@ -10,7 +10,7 @@ const Bloglist = ({ blogs, setBlogs }) => {
     return 0
   }
   return (
-    <div id='bloglist'>
+    <div className='bloglist' id='bloglist'>
       {blogs.sort((a, b) => sortFunc(a.likes, b.likes)).map((blog, index) =>
         <Blog key={blog.id} blog={blog} index={index} allBlogs={blogs} setBlogs={setBlogs}/>
       )}

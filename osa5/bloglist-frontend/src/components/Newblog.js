@@ -9,6 +9,9 @@ const NewBlog = ({ addBlog }) => {
   const addBlogEvent = async (event) => {
     event.preventDefault()
     addBlog(title, author, url)
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (

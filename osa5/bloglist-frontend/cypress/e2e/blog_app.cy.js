@@ -53,6 +53,7 @@ describe('Blog app', function() {
       author: '10xDev',
       url: 'www.mybasement.com'
     }
+
     beforeEach(function() {
       cy.get('#username').type(user.username)
       cy.get('#password').type(user.password)
@@ -103,6 +104,55 @@ describe('Blog app', function() {
         cy.get('#remove-button').click()
         cy.get('#bloglist').should(bloglist => {
           expect(bloglist).not.to.contain(`${blog.title} ${blog.author}`)
+        })
+      })
+
+      describe('Blogs are ordered based on likes', function() {
+        cy.createBlog = function({ title, author, url }) {
+          cy.get('#create-blog').click()
+          cy.get('#title').type(title)
+          cy.get('#author').type(author)
+          cy.get('#url').type(url)
+          cy.get('#create-button').click()
+        }
+
+        const firstBlog = {
+          title: 'Added First',
+          author: 'Spammer',
+          url: 'www.spamspamspam.com'
+        }
+
+        const secondBlog = {
+          title: 'Added Second',
+          author: 'Spammer',
+          url: 'www.spamspamspam.com'
+        }
+
+        const thirdBlog = {
+          title: 'Added Third',
+          author: 'Spammer',
+          url: 'www.spamspamspam.com'
+        }
+
+        beforeEach(function () {
+          cy.createBlog(firstBlog)
+          cy.createBlog(secondBlog)
+          cy.createBlog(thirdBlog)
+        })
+
+        it('Blogs are in order', async function() {
+          cy.get('.blog').eq(0).should('contain', blog.title)
+          cy.get('.blog').eq(1).should('contain', firstBlog.title)
+          cy.get('.blog').eq(2).should('contain', secondBlog.title)
+          cy.get('.blog').eq(3).should('contain', thirdBlog.title)
+          cy.get('.blog').eq(3).find('#view-button').click()
+          cy.get('.blog').eq(3).find('#like-button').click()
+          cy.get('.blog').eq(0).should('contain', thirdBlog.title)
+          cy.get('.blog').eq(2).find('#view-button').click()
+          cy.get('.blog').eq(2).find('#like-button').should('contain', 'like').click()
+          cy.get('.blog').eq(1).find('#like-button').should('contain', 'like').click()
+          cy.get('.blog').eq(0).contains(firstBlog.title)
+          cy.get('.blog').eq(1).contains(thirdBlog.title)
         })
       })
     })
