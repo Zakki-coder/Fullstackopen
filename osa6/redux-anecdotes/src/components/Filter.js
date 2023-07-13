@@ -1,14 +1,10 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { filter } from '../reducers/filterReducer'
+import { useDispatch } from 'react-redux'
 
 const Filter = () => {
   const dispatch = useDispatch()
-    const anecdotesReducer = useSelector(store => store.anecdotes)
-    const filterReducer = useSelector(store => store.filter)
 
   const handleChange = (event) => {
-    dispatch(filter(event.target.value))
-    // input-kentän arvo muuttujassa event.target.value
+    dispatch({ type: 'filter/updateFilter', payload: event.target.value })
   }
   const style = {
     marginBottom: 10
