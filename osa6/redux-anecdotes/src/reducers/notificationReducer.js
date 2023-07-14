@@ -4,11 +4,8 @@ const notificationSlice = createSlice({
   name: 'notification',
   initialState: '',
   reducers: {
-    newAnecdote(state, action) {
-      return `You added a new exciting anecdote '${action.payload}'`
-    },
-    newVote(state, action) {
-      return `You voted '${action.payload}'`
+    newNotification(state, action) {
+      return action.payload
     },
     reset(state, action) {
       return ''
@@ -16,5 +13,21 @@ const notificationSlice = createSlice({
   }
 })
 
-export const { newAnecdote, newVote, reset } = notificationSlice.actions
+export const { newVote, reset } = notificationSlice.actions
+
+//Spamming notification made it buggy, this fixes it.
+var prevTimeout
+
+export const setNotification = (content, timeout) => {
+  const { newNotification } = notificationSlice.actions
+  return dispatch => {
+    clearTimeout(prevTimeout)
+    dispatch(newNotification(content))
+    prevTimeout = setTimeout(() => {
+      dispatch(reset())
+      prevTimeout = null
+    }, timeout * 1000)
+  }
+}
+
 export default notificationSlice.reducer
