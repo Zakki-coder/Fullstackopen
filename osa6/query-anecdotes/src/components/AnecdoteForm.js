@@ -11,6 +11,7 @@ const createAnecdote = (content) => {
   }
 }
 
+//TODO is the rerendering happening by requering from server?? IF so, CHANGE IT!!!
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
   const newAnecdoteMutation = useMutation(newAnecdote)
@@ -21,7 +22,8 @@ const AnecdoteForm = () => {
     const anecdote = createAnecdote(content)
     newAnecdoteMutation.mutate(anecdote, {
      onSuccess: () => {
-        queryClient.invalidateQueries('anecdotes')
+       const notes = queryClient.getQueryData('anecdotes')
+       queryClient.setQueryData('anecdotes', notes.concat(anecdote))
       }
     })
     event.target.anecdote.value = ''

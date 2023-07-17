@@ -8,14 +8,13 @@ const getAll = async () => {
 }
 
 const newAnecdote = (anecdote) => {
-  console.log(anecdote)
-  axios.post(baseUrl, anecdote).then(response => {
-    console.log('RESP', response)
-    return response.data
-  }).catch(err => {
-    console.log('WTF ERROR', err)
-  })
+  axios.post(baseUrl, anecdote).then(response => response.data)
 }
 
-export { getAll, newAnecdote }
+const updateAnecdote = (anecdote) => {
+  const id = anecdote.id
+  axios.put(`${baseUrl}/${id}`, anecdote).then(response => response.data)
+}
+
+export { getAll, newAnecdote, updateAnecdote }
 
