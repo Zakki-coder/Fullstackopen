@@ -8,12 +8,12 @@ const getAll = async () => {
 }
 
 const newAnecdote = (anecdote) => {
-  axios.post(baseUrl, anecdote).then(response => response.data)
+  return axios.post(baseUrl, anecdote).then(response => response.data)
 }
 
 const updateAnecdote = (anecdote) => {
   const id = anecdote.id
-  axios.put(`${baseUrl}/${id}`, anecdote).then(response => response.data)
+  return axios.put(`${baseUrl}/${id}`, anecdote).then(response => response.data)
 }
 
 export { getAll, newAnecdote, updateAnecdote }
