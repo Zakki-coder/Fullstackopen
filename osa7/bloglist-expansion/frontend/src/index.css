@@ -1,0 +1,37 @@
+.notification {
+  color: green;
+  background: palegreen;
+  font-size: 30px;
+  border-style: solid;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.errornotification {
+  color: red;
+  background: lightgrey;
+  font-size: 30px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.blog {
+  display: blog;
+  border: solid;
+  border-radius: 5px;
+  border-width: 2px;
+  padding-top: 10px;
+  padding-left: 3px;
+  margin-bottom: 3px;
+}
+
+.blog:hover {
+  background: lightgreen;
+}
+
+button {
+  margin-left: 3px;
+}
