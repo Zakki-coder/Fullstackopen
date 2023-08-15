@@ -2,6 +2,8 @@ import { useState } from 'react'
 import Likes from './Likes'
 import Services from '../services/blogs'
 import PropTypes from 'prop-types'
+import { removeBlog } from '../reducers/blogsReducer'
+import { useDispatch } from 'react-redux'
 
 const Blog = ({ blog, index, allBlogs, setBlogs }) => {
   const [show, setShow] = useState(false)
@@ -13,41 +15,12 @@ const Blog = ({ blog, index, allBlogs, setBlogs }) => {
         ? ''
         : 'none',
   }
+  const dispatch = useDispatch()
 
   const toggleShow = () => {
     const showInvert = !show
     setShow(showInvert)
     showInvert ? setLabel('hide') : setLabel('view')
-  }
-
-  const removeBlog = async () => {
-    const confirm = window.confirm(
-      `Remove blog ${blog.title} by ${blog.author}`,
-    )
-    if (confirm) {
-      try {
-        const response = await Services.remove(blog.id)
-        if (response) {
-          const newBlogs = allBlogs.toSpliced(index, 1)
-          setBlogs(newBlogs)
-        }
-      } catch (exception) {
-        console.error(exception)
-      }
-    }
-  }
-
-  const addLike = async (event) => {
-    event.stopPropagation()
-    const newBlogs = [...allBlogs]
-    const updatedBlog = { ...blog, likes: blog.likes + 1 }
-    newBlogs[index] = updatedBlog
-    setBlogs(newBlogs)
-    try {
-      await Services.put(updatedBlog)
-    } catch (exception) {
-      console.error(exception)
-    }
   }
 
   return (
@@ -60,10 +33,10 @@ const Blog = ({ blog, index, allBlogs, setBlogs }) => {
         <div id="blog-info" style={viewInfo} className="togglableContent">
           <a href={`//${blog.url}`}>{blog.url}</a>
           <br></br>
-          <Likes blog={blog} addLike={addLike} />
+          <Likes blog={blog} />
           {blog.user.username}
           <br></br>
-          <button id="remove-button" style={viewRemove} onClick={removeBlog}>
+          <button id="remove-button" style={viewRemove} onClick={() => dispatch(removeBlog(blog))}>
             remove
           </button>
         </div>

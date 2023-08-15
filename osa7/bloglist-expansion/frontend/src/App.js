@@ -7,7 +7,8 @@ import Newblog from './components/Newblog'
 import Togglable from './components/Togglable'
 import User from './components/User'
 import { newNotification } from './reducers/notificationReducer'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser } from './reducers/userReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,16 +16,16 @@ const App = () => {
     username: '',
     password: '',
   })
-  const [user, setUser] = useState(null)
   const [errorMessage, setError] = useState('')
   const blogFormRef = useRef()
   const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
 
   useEffect(() => {
     try {
       const tokenStr = window.localStorage.getItem('loggedBlogappUser')
       const loggedUser = JSON.parse(tokenStr)
-      setUser(loggedUser)
+      dispatch(setUser(loggedUser))
     } catch (exception) {
       console.log(exception)
     }
@@ -36,26 +37,10 @@ const App = () => {
     }
   }, [user])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const response = await loginService.userLogin(userCredentials)
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(response))
-      window.localStorage.setItem(
-        'loggedUsername',
-        JSON.stringify(userCredentials.username),
-      )
-      setUser(response)
-      setCredentials({ username: '', password: '' })
-    } catch (exception) {
-      setError('wrong username or password')
-    }
-  }
-
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     window.localStorage.removeItem('loggedUsername')
-    setUser(null)
+    dispatch(setUser(null))
   }
 
   const addBlog = async (title, author, url) => {
@@ -89,7 +74,6 @@ const App = () => {
   return (
     <Login
       userCredentials={userCredentials}
-      handleLogin={handleLogin}
       setCredentials={setCredentials}
       setError={setError}
       errorMessage={errorMessage}

@@ -1,13 +1,33 @@
 import ErrorNotification from './Errornotification'
 import PropTypes from 'prop-types'
+import { setUser } from '../reducers/userReducer'
+import { useDispatch } from 'react-redux'
+import loginService from '../services/login'
 
 const Login = ({
   userCredentials,
-  handleLogin,
   setCredentials,
   errorMessage,
   setError,
-}) => (
+}) => {
+  const dispatch = useDispatch()
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      const response = await loginService.userLogin(userCredentials)
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(response))
+      window.localStorage.setItem(
+        'loggedUsername',
+        JSON.stringify(userCredentials.username),
+      )
+      dispatch(setUser(response))
+      setCredentials({ username: '', password: '' })
+    } catch (exception) {
+      setError('wrong username or password')
+    }
+  }
+
+  return (
   <div>
     <h2>Login to application</h2>
     <ErrorNotification message={errorMessage} setError={setError} />
@@ -41,7 +61,7 @@ const Login = ({
       </button>
     </form>
   </div>
-)
+)}
 
 Login.propTypes = {
   userCredentials: PropTypes.shape({

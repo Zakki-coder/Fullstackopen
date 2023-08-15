@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { addBlog } from '../reducers/blogsReducer'
 
-const NewBlog = ({ addBlog }) => {
+const NewBlog = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const dispatch = useDispatch()
 
   const addBlogEvent = async (event) => {
     event.preventDefault()
-    addBlog(title, author, url)
+    dispatch(addBlog({ title, author, url }))
     setTitle('')
     setAuthor('')
     setUrl('')
