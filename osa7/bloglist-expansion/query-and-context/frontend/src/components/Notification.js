@@ -1,12 +1,15 @@
 import { useContext } from 'react'
-import NotificationContext from '../reducers/notificationReducer'
+import NotificationContext, { createNotification } from '../contexts/notificationContext'
 
 const Notification = () => {
-  const context = useContext(NotificationContext)
-  const message = context[0]
-  console.log('Message:', message)
+  const [message, setNotification] = useContext(NotificationContext)
 
-  if (!message) return null
+  if (!message)
+    return null
+
+  setTimeout(() => {
+    setNotification(createNotification(''))
+  }, 5000)
 
   return (
     <div>

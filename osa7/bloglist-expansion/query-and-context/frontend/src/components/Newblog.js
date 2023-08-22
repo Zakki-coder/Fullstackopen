@@ -1,24 +1,37 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
-import { addBlog } from '../reducers/blogsReducer'
 import { useContext } from 'react'
-import NotificationContext, { setNotification } from '../reducers/notificationReducer'
+import NotificationContext, { createNotification } from '../contexts/notificationContext'
+import { useMutation, useQueryClient } from 'react-query'
+import { addBlog } from '../services/blogs'
 
-const NewBlog = () => {
+const NewBlog = ({ blogFormRef }) => {
+  const notificationDispatch = useContext(NotificationContext)[1]
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const dispatch = useDispatch()
-  const notificationDispatch = useContext(NotificationContext)[1]
- 
+  const queryClient = useQueryClient('blogs')
+
+  const addBlogMutation = useMutation(addBlog, {
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData('blogs')
+      queryClient.setQueryData('blogs', blogs.concat(newBlog))
+    }
+  })
+
+  const blogAdd = (title, author, url) => {
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url
+    }
+    addBlogMutation.mutate(newBlog)
+    blogFormRef.current.toggleVisible()
+  }
+
   const addBlogEvent = async (event) => {
     event.preventDefault()
-    dispatch(addBlog({ title, author, url }))
-    setTimeout(() => {
-      notificationDispatch(setNotification(''))
-    }, 5000)
-    notificationDispatch(setNotification(`${title} by ${author} added` ))
+    blogAdd(title, author, url)
+    notificationDispatch(createNotification(`${title} by ${author} added`))
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -30,50 +43,44 @@ const NewBlog = () => {
       <form onSubmit={addBlogEvent}>
         <div>
           <label>
-            title:
+          title:
             <input
               id="title"
               type="text"
               value={title}
               name="title"
-              onChange={({ target }) => setTitle(target.value)}
+              onChange={({ target }) => setTitle(target.value) }
             />
           </label>
         </div>
         <div>
           <label>
-            author:
+          author:
             <input
               id="author"
               type="text"
               value={author}
               name="author"
-              onChange={({ target }) => setAuthor(target.value)}
+              onChange={({ target } ) => setAuthor(target.value) }
             />
           </label>
         </div>
         <div>
           <label>
-            url:
+          url:
             <input
               id="url"
               type="text"
               value={url}
               name="url"
-              onChange={({ target }) => setUrl(target.value)}
+              onChange={({ target }) => setUrl(target.value) }
             />
           </label>
         </div>
-        <button id="create-button" type="submit">
-          create
-        </button>
+        <button id="create-button" type="submit">create</button>
       </form>
     </div>
   )
-}
-
-NewBlog.propTypes = {
-  addBlog: PropTypes.func.isRequired,
 }
 
 export default NewBlog

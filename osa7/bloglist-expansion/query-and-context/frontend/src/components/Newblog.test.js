@@ -12,13 +12,15 @@ test('Test NewBlog form', async () => {
     likes: 1337,
     user: {
       username: 'Pertti Kurikka',
-      password: 'kovasikajuttu',
-    },
+      password: 'kovasikajuttu'
+    }
   }
 
   const addBlogMock = jest.fn()
   const user = userEvent.setup()
-  render(<NewBlog addBlog={addBlogMock} />)
+  render(
+    <NewBlog addBlog={addBlogMock}/>
+  )
   const submitButton = screen.getByRole('button', { name: 'create' })
   const title = screen.getByRole('textbox', { name: 'title:' })
   const author = screen.getByRole('textbox', { name: 'author:' })

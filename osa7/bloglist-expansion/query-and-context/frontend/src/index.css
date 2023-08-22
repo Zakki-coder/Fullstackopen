@@ -19,14 +19,14 @@
 }
 
 .blog {
-  display: blog;
+  display:blog;
   border: solid;
   border-radius: 5px;
   border-width: 2px;
   padding-top: 10px;
   padding-left: 3px;
   margin-bottom: 3px;
-}
+  }
 
 .blog:hover {
   background: lightgreen;

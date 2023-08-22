@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Like from './Likes'
 
-test('mocking like button', async () => {
+test('mocking like button' , async () => {
   const blog = {
     title: 'Kukkuluuruu kaivosta',
     author: 'Kaivon Huutaja',
@@ -12,13 +12,15 @@ test('mocking like button', async () => {
     likes: 1337,
     user: {
       username: 'Pertti Kurikka',
-      password: 'kovasikajuttu',
-    },
+      password: 'kovasikajuttu'
+    }
   }
 
   const user = userEvent.setup()
   const mockFn = jest.fn()
-  render(<Like blog={blog} addLike={mockFn} />)
+  render(
+    <Like blog={blog} addLike={mockFn} />
+  )
   const likeButton = screen.getByText(/like/)
   await user.click(likeButton)
   await user.click(likeButton)

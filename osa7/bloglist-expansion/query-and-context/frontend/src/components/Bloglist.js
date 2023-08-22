@@ -1,43 +1,32 @@
 import Blog from './Blog'
-import PropTypes from 'prop-types'
-import { initializeBlogs } from '../reducers/blogsReducer'
-import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useQuery } from 'react-query'
+import { getAll } from '../services/blogs'
 
 const Bloglist = ({ setBlogs }) => {
-  const blogs = useSelector(state => state.blogs).slice() 
-  const dispatch = useDispatch()
+  const blogQuery = useQuery('blogs', getAll)
+  let blogs = ''
 
-  useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [])
+  if (blogQuery.status === 'success')
+    blogs = blogQuery.data
 
   const sortFunc = (a, b) => {
-    if (a > b) return -1
-    if (a < b) return 1
+    if (a > b)
+      return -1
+    if (a < b)
+      return 1
     return 0
   }
 
-  return (
-    <div className="bloglist" id="bloglist">
-      {blogs
-        .sort((a, b) => sortFunc(a.likes, b.likes))
-        .map((blog, index) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            index={index}
-            allBlogs={blogs}
-            setBlogs={setBlogs}
-          />
-        ))}
-    </div>
-  )
-}
-
-Bloglist.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
+  if (blogs) {
+    return (
+      <div className='bloglist' id='bloglist'>
+        {blogs.sort((a, b) => sortFunc(a.likes, b.likes)).map((blog, index) =>
+          <Blog key={blog.id} blog={blog} index={index} allBlogs={blogs} setBlogs={setBlogs}/>
+        )}
+      </div>
+    )
+  }
+  return null
 }
 
 export default Bloglist
