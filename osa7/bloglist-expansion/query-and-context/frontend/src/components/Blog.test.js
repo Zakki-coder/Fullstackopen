@@ -12,12 +12,14 @@ describe('Testing Blog component', () => {
     likes: 1337,
     user: {
       username: 'Pertti Kurikka',
-      password: 'kovasikajuttu'
-    }
+      password: 'kovasikajuttu',
+    },
   }
 
   const renderer = () => {
-    render(<Blog blog={blog} index={0} allBlogs={[blog]} setBlogs={() => true} />).container
+    render(
+      <Blog blog={blog} index={0} allBlogs={[blog]} setBlogs={() => true} />,
+    ).container
   }
 
   test('render blog', () => {

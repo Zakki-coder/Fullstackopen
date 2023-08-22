@@ -2,10 +2,10 @@ import { createContext, useReducer } from 'react'
 
 const userReducer = (state, action) => {
   switch (action.type) {
-  case 'SET':
-    return action.payload
-  default:
-    return state
+    case 'SET':
+      return action.payload
+    default:
+      return state
   }
 }
 
@@ -26,7 +26,7 @@ export const UserContextProvider = (props) => {
 export const setUser = (user) => {
   return {
     type: 'SET',
-    payload: user
+    payload: user,
   }
 }
 

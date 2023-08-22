@@ -2,19 +2,20 @@ import axios from 'axios'
 const baseUrl = '/api/blogs'
 
 const authorize = () => {
-  const config =
-    {
-      headers: { Authorization: `Bearer ${JSON.parse(window.localStorage.getItem('loggedBlogappUser'))}` }
-    }
+  const config = {
+    headers: {
+      Authorization: `Bearer ${JSON.parse(
+        window.localStorage.getItem('loggedBlogappUser'),
+      )}`,
+    },
+  }
   return config
 }
 
 export const getAll = () => {
   const config = authorize()
-  const request =
-    axios
-      .get(baseUrl, config)
-  return request.then(response => response.data)
+  const request = axios.get(baseUrl, config)
+  return request.then((response) => response.data)
 }
 
 const post = ({ title, author, url }) => {
@@ -22,38 +23,34 @@ const post = ({ title, author, url }) => {
   const data = {
     title: title,
     author: author,
-    url: url
+    url: url,
   }
-  const request =
-    axios
-      .post(baseUrl, data, config)
-  return request.then(response => response.data)
+  const request = axios.post(baseUrl, data, config)
+  return request.then((response) => response.data)
 }
 
 export const addBlog = post
 
-const put = async(blog) => {
+const put = async (blog) => {
   const config = authorize()
   const url = `${baseUrl}/${blog.id}`
   try {
-    const response = await axios
-      .put(url, blog, config)
+    const response = await axios.put(url, blog, config)
     return response
-  } catch(exception) {
+  } catch (exception) {
     console.error(exception)
   }
 }
 
 export const putBlog = put
 
-const remove = async(id) => {
+const remove = async (id) => {
   const config = authorize()
   const url = `${baseUrl}/${id}`
   try {
-    const response = await axios
-      .delete(url, config)
+    const response = await axios.delete(url, config)
     return response
-  } catch(exception) {
+  } catch (exception) {
     console.error(exception)
   }
 }

@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useContext } from 'react'
-import NotificationContext, { createNotification } from '../contexts/notificationContext'
+import NotificationContext, {
+  createNotification,
+} from '../contexts/notificationContext'
 import { useMutation, useQueryClient } from 'react-query'
 import { addBlog } from '../services/blogs'
 
@@ -15,14 +17,14 @@ const NewBlog = ({ blogFormRef }) => {
     onSuccess: (newBlog) => {
       const blogs = queryClient.getQueryData('blogs')
       queryClient.setQueryData('blogs', blogs.concat(newBlog))
-    }
+    },
   })
 
   const blogAdd = (title, author, url) => {
     const newBlog = {
       title: title,
       author: author,
-      url: url
+      url: url,
     }
     addBlogMutation.mutate(newBlog)
     blogFormRef.current.toggleVisible()
@@ -43,41 +45,43 @@ const NewBlog = ({ blogFormRef }) => {
       <form onSubmit={addBlogEvent}>
         <div>
           <label>
-          title:
+            title:
             <input
               id="title"
               type="text"
               value={title}
               name="title"
-              onChange={({ target }) => setTitle(target.value) }
+              onChange={({ target }) => setTitle(target.value)}
             />
           </label>
         </div>
         <div>
           <label>
-          author:
+            author:
             <input
               id="author"
               type="text"
               value={author}
               name="author"
-              onChange={({ target } ) => setAuthor(target.value) }
+              onChange={({ target }) => setAuthor(target.value)}
             />
           </label>
         </div>
         <div>
           <label>
-          url:
+            url:
             <input
               id="url"
               type="text"
               value={url}
               name="url"
-              onChange={({ target }) => setUrl(target.value) }
+              onChange={({ target }) => setUrl(target.value)}
             />
           </label>
         </div>
-        <button id="create-button" type="submit">create</button>
+        <button id="create-button" type="submit">
+          create
+        </button>
       </form>
     </div>
   )

@@ -16,11 +16,10 @@ const Login = () => {
     event.preventDefault()
     try {
       const response = await loginService.userLogin(userCredentials)
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(response))
       window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(response)
-      )
-      window.localStorage.setItem(
-        'loggedUsername', JSON.stringify(userCredentials.username)
+        'loggedUsername',
+        JSON.stringify(userCredentials.username),
       )
       userDispatch(setUser(response))
       setCredentials({ username: '', password: '' })
@@ -32,29 +31,35 @@ const Login = () => {
   return (
     <div>
       <h2>Login to application</h2>
-      <ErrorNotification message={errorMessage} setError={setError}/>
+      <ErrorNotification message={errorMessage} setError={setError} />
       <form onSubmit={handleLogin}>
         <div>
           username
           <input
-            id='username'
+            id="username"
             type="text"
             value={userCredentials.username}
             name="Username"
-            onChange={({ target }) => setCredentials({ ...userCredentials, username: target.value })}
+            onChange={({ target }) =>
+              setCredentials({ ...userCredentials, username: target.value })
+            }
           />
         </div>
         <div>
-        password
+          password
           <input
-            id='password'
+            id="password"
             type="password"
             value={userCredentials.password}
             name="Password"
-            onChange={({ target }) => setCredentials({ ...userCredentials, password: target.value })}
+            onChange={({ target }) =>
+              setCredentials({ ...userCredentials, password: target.value })
+            }
           />
         </div>
-        <button id='login-button' type="submit">login</button>
+        <button id="login-button" type="submit">
+          login
+        </button>
       </form>
     </div>
   )
@@ -62,7 +67,7 @@ const Login = () => {
 
 Login.propTypes = {
   errorMessage: PropTypes.string.isRequired,
-  setError: PropTypes.func.isRequired
+  setError: PropTypes.func.isRequired,
 }
 
 export default Login

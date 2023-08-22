@@ -1,11 +1,12 @@
 import { useContext } from 'react'
-import NotificationContext, { createNotification } from '../contexts/notificationContext'
+import NotificationContext, {
+  createNotification,
+} from '../contexts/notificationContext'
 
 const Notification = () => {
   const [message, setNotification] = useContext(NotificationContext)
 
-  if (!message)
-    return null
+  if (!message) return null
 
   setTimeout(() => {
     setNotification(createNotification(''))

@@ -8,8 +8,12 @@ const Blog = ({ blog, index }) => {
   const [show, setShow] = useState(false)
   const [buttonLabel, setLabel] = useState('view')
   const viewInfo = { display: show ? '' : 'none' }
-  const viewRemove =
-    { display: window.localStorage.loggedUsername === JSON.stringify(blog.user.username) ? '' : 'none' }
+  const viewRemove = {
+    display:
+      window.localStorage.loggedUsername === JSON.stringify(blog.user.username)
+        ? ''
+        : 'none',
+  }
   const queryClient = useQueryClient()
 
   const removeBlogMutation = useMutation(removeBlog, {
@@ -17,7 +21,7 @@ const Blog = ({ blog, index }) => {
       const blogs = queryClient.getQueryData('blogs')
       const newBlogs = blogs.toSpliced(index, 1)
       queryClient.setQueryData('blogs', newBlogs)
-    }
+    },
   })
 
   const toggleShow = () => {
@@ -27,7 +31,9 @@ const Blog = ({ blog, index }) => {
   }
 
   const blogRemove = () => {
-    const confirm = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
+    const confirm = window.confirm(
+      `Remove blog ${blog.title} by ${blog.author}`,
+    )
     if (confirm) {
       removeBlogMutation.mutate(blog.id)
     }
@@ -39,7 +45,7 @@ const Blog = ({ blog, index }) => {
       const updatedBlog = { ...blog, likes: blog.likes + 1 }
       newBlogs[index] = updatedBlog
       queryClient.setQueryData('blogs', newBlogs)
-    }
+    },
   })
 
   const addLike = async (event) => {
@@ -49,17 +55,23 @@ const Blog = ({ blog, index }) => {
   }
 
   return (
-    <div className='blog' onClick={toggleShow}>
+    <div className="blog" onClick={toggleShow}>
       {blog.title} {blog.author}
-      <button id='view-button' onClick={toggleShow}>{buttonLabel}</button>
-      {show &&
-      <div id='blog-info' style={viewInfo} className='togglableContent'>
-        <a href={`//${blog.url}`}>{blog.url}</a><br></br>
-        <Likes blog={blog} addLike={addLike}/>
-        {blog.user.username}<br></br>
-        <button id='remove-button' style={viewRemove} onClick={blogRemove}>remove</button>
-      </div>
-      }
+      <button id="view-button" onClick={toggleShow}>
+        {buttonLabel}
+      </button>
+      {show && (
+        <div id="blog-info" style={viewInfo} className="togglableContent">
+          <a href={`//${blog.url}`}>{blog.url}</a>
+          <br></br>
+          <Likes blog={blog} addLike={addLike} />
+          {blog.user.username}
+          <br></br>
+          <button id="remove-button" style={viewRemove} onClick={blogRemove}>
+            remove
+          </button>
+        </div>
+      )}
     </div>
   )
 }

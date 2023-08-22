@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types'
 
 const ErrorNotification = ({ message, setError }) => {
-  if (!message)
-    return null
+  if (!message) return null
 
   setTimeout(() => {
     setError('')
@@ -17,8 +16,7 @@ const ErrorNotification = ({ message, setError }) => {
 
 ErrorNotification.propTypes = {
   message: PropTypes.string.isRequired,
-  setError: PropTypes.func.isRequired
+  setError: PropTypes.func.isRequired,
 }
 
 export default ErrorNotification
-

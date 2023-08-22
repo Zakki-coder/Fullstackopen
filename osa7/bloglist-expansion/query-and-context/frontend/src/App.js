@@ -34,15 +34,20 @@ const App = () => {
   if (user)
     return (
       <div>
-        <User handleLogout={handleLogout}/>
-        <Togglable buttonLabel='create blog' ref={blogFormRef}>
-          <Newblog blogFormRef={blogFormRef}/>
+        <User handleLogout={handleLogout} />
+        <Togglable buttonLabel="create blog" ref={blogFormRef}>
+          <Newblog blogFormRef={blogFormRef} />
         </Togglable>
         <Bloglist />
       </div>
     )
   return (
-    <Login userCredentials={userCredentials} setCredentials={setCredentials} setError={setError} errorMessage={errorMessage} />
+    <Login
+      userCredentials={userCredentials}
+      setCredentials={setCredentials}
+      setError={setError}
+      errorMessage={errorMessage}
+    />
   )
 }
 
