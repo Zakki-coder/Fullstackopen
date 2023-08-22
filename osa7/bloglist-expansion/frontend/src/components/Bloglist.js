@@ -1,10 +1,9 @@
 import Blog from './Blog'
-import PropTypes from 'prop-types'
 import { initializeBlogs } from '../reducers/blogsReducer'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-const Bloglist = ({ setBlogs }) => {
+const Bloglist = () => {
   const blogs = useSelector(state => state.blogs).slice() 
   const dispatch = useDispatch()
 
@@ -22,22 +21,14 @@ const Bloglist = ({ setBlogs }) => {
     <div className="bloglist" id="bloglist">
       {blogs
         .sort((a, b) => sortFunc(a.likes, b.likes))
-        .map((blog, index) => (
+        .map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}
-            index={index}
-            allBlogs={blogs}
-            setBlogs={setBlogs}
           />
         ))}
     </div>
   )
-}
-
-Bloglist.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
 }
 
 export default Bloglist

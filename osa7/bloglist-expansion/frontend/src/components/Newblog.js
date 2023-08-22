@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { addBlog } from '../reducers/blogsReducer'
+import { newNotification } from '../reducers/notificationReducer'
 
 const NewBlog = () => {
   const [title, setTitle] = useState('')
@@ -12,6 +12,7 @@ const NewBlog = () => {
   const addBlogEvent = async (event) => {
     event.preventDefault()
     dispatch(addBlog({ title, author, url }))
+    dispatch(newNotification(`${title} by ${author} added`))
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -63,10 +64,6 @@ const NewBlog = () => {
       </form>
     </div>
   )
-}
-
-NewBlog.propTypes = {
-  addBlog: PropTypes.func.isRequired,
 }
 
 export default NewBlog

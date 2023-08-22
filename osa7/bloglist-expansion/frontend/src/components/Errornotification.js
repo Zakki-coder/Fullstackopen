@@ -4,7 +4,7 @@ const ErrorNotification = ({ message, setError }) => {
   if (!message) return null
 
   setTimeout(() => {
-    setError(null)
+    setError('')
   }, 5000)
 
   return (

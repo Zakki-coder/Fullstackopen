@@ -1,17 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
-import blogService from './services/blogs'
-import loginService from './services/login'
 import Login from './components/Login'
 import Bloglist from './components/Bloglist'
 import Newblog from './components/Newblog'
 import Togglable from './components/Togglable'
 import User from './components/User'
-import { newNotification } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser } from './reducers/userReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [userCredentials, setCredentials] = useState({
     username: '',
     password: '',
@@ -31,32 +27,10 @@ const App = () => {
     }
   }, [])
 
-  useEffect(() => {
-    if (user) {
-      blogService.getAll().then((blogs) => setBlogs(blogs))
-    }
-  }, [user])
-
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     window.localStorage.removeItem('loggedUsername')
     dispatch(setUser(null))
-  }
-
-  const addBlog = async (title, author, url) => {
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url,
-    }
-    try {
-      const response = await blogService.post(newBlog)
-      setBlogs([...blogs, response])
-      dispatch(newNotification(`a new blog ${title} by ${author} added`))
-      blogFormRef.current.toggleVisible()
-    } catch (exception) {
-      console.error('Posting of a new blog failed', exception)
-    }
   }
 
   if (user)
@@ -66,9 +40,9 @@ const App = () => {
           handleLogout={handleLogout}
         />
         <Togglable buttonLabel="create blog" ref={blogFormRef}>
-          <Newblog addBlog={addBlog} />
+          <Newblog />
         </Togglable>
-        <Bloglist blogs={blogs} setBlogs={setBlogs} />
+        <Bloglist />
       </div>
     )
   return (

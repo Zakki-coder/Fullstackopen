@@ -16,7 +16,6 @@ const Likes = ({ blog }) => {
 
 Likes.propTypes = {
   blog: PropTypes.object.isRequired,
-  addLike: PropTypes.func.isRequired,
 }
 
 export default Likes

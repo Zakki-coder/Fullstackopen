@@ -68,9 +68,8 @@ Login.propTypes = {
     username: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
   }),
-  handleLogin: PropTypes.func.isRequired,
-  setCredentials: PropTypes.func.isRequired,
   errorMessage: PropTypes.string.isRequired,
+  setCredentials: PropTypes.func.isRequired,
   setError: PropTypes.func.isRequired,
 }
 

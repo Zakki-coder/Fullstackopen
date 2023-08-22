@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import Likes from './Likes'
-import Services from '../services/blogs'
 import PropTypes from 'prop-types'
 import { removeBlog } from '../reducers/blogsReducer'
 import { useDispatch } from 'react-redux'
 
-const Blog = ({ blog, index, allBlogs, setBlogs }) => {
+const Blog = ({ blog }) => {
   const [show, setShow] = useState(false)
   const [buttonLabel, setLabel] = useState('view')
   const viewInfo = { display: show ? '' : 'none' }
@@ -47,9 +46,6 @@ const Blog = ({ blog, index, allBlogs, setBlogs }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  allBlogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
 }
 
 export default Blog
