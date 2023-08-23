@@ -6,6 +6,10 @@ import Togglable from './components/Togglable'
 import User from './components/User'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser } from './reducers/userReducer'
+import { BrowserRouter as Router,
+        Routes, Route, Link
+} from 'react-router-dom'
+import Users from './components/Users'
 
 const App = () => {
   const [userCredentials, setCredentials] = useState({
@@ -33,17 +37,32 @@ const App = () => {
     dispatch(setUser(null))
   }
 
+  const padding = {
+    padding: 5
+  }
+
   if (user)
     return (
+    <Router>
       <div>
-        <User
-          handleLogout={handleLogout}
-        />
-        <Togglable buttonLabel="create blog" ref={blogFormRef}>
-          <Newblog />
-        </Togglable>
-        <Bloglist />
+        <Link style={padding} to='/'>blogs</Link>
+        <Link style={padding} to='/users'>users</Link>
       </div>
+      <div>
+        <User handleLogout={handleLogout} />
+      </div>
+        <Routes>
+          <Route path='/' element={
+            <div>
+              <Togglable buttonLabel="create blog" ref={blogFormRef}>
+                <Newblog />
+              </Togglable>
+              <Bloglist />
+            </div>
+          }/>
+          <Route path='/users' element={<Users/>}/>
+        </Routes>
+    </Router>
     )
   return (
     <Login
