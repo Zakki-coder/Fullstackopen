@@ -1,15 +1,8 @@
 import Blog from './Blog'
-import { initializeBlogs } from '../reducers/blogsReducer'
-import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 const Bloglist = () => {
   const blogs = useSelector(state => state.blogs).slice() 
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [])
 
   const sortFunc = (a, b) => {
     if (a > b) return -1

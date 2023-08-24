@@ -6,10 +6,12 @@ import Togglable from './components/Togglable'
 import User from './components/User'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser } from './reducers/userReducer'
+import { initializeBlogs } from './reducers/blogsReducer'
 import { BrowserRouter as Router,
         Routes, Route, Link
 } from 'react-router-dom'
 import Users from './components/Users'
+import UsersBlogs from './components/UsersBlogs'
 
 const App = () => {
   const [userCredentials, setCredentials] = useState({
@@ -26,6 +28,7 @@ const App = () => {
       const tokenStr = window.localStorage.getItem('loggedBlogappUser')
       const loggedUser = JSON.parse(tokenStr)
       dispatch(setUser(loggedUser))
+      dispatch(initializeBlogs()) //With this blogs exist even when refreshing routers
     } catch (exception) {
       console.log(exception)
     }
@@ -41,6 +44,17 @@ const App = () => {
     padding: 5
   }
 
+  const Blogs = () => {
+    return (
+      <div>
+        <Togglable buttonLabel="create blog" ref={blogFormRef}>
+           <Newblog />
+        </Togglable>
+        <Bloglist />
+      </div>
+    )
+  }
+
   if (user)
     return (
     <Router>
@@ -52,18 +66,15 @@ const App = () => {
         <User handleLogout={handleLogout} />
       </div>
         <Routes>
-          <Route path='/' element={
-            <div>
-              <Togglable buttonLabel="create blog" ref={blogFormRef}>
-                <Newblog />
-              </Togglable>
-              <Bloglist />
-            </div>
-          }/>
-          <Route path='/users' element={<Users/>}/>
+          <Route path='/' element={<Blogs/>}/>
+          <Route path='users' element={<Users/>}>
+            <Route path=':user' element={<UsersBlogs/>}/>
+          </Route>
+          <Route path='*' element={<Blogs/>}/>
         </Routes>
     </Router>
     )
+
   return (
     <Login
       userCredentials={userCredentials}
