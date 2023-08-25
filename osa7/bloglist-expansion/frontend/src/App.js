@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Login from './components/Login'
-import Bloglist from './components/Bloglist'
-import Newblog from './components/Newblog'
-import Togglable from './components/Togglable'
-import User from './components/User'
+import User, { LoggedInUser } from './components/User'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser } from './reducers/userReducer'
 import { initializeBlogs } from './reducers/blogsReducer'
@@ -12,6 +9,8 @@ import { BrowserRouter as Router,
 } from 'react-router-dom'
 import Users from './components/Users'
 import UsersBlogs from './components/UsersBlogs'
+import BlogInfo from './components/BlogInfo'
+import Blogs from './components/Blogs'
 
 const App = () => {
   const [userCredentials, setCredentials] = useState({
@@ -44,33 +43,31 @@ const App = () => {
     padding: 5
   }
 
-  const Blogs = () => {
-    return (
-      <div>
-        <Togglable buttonLabel="create blog" ref={blogFormRef}>
-           <Newblog />
-        </Togglable>
-        <Bloglist />
-      </div>
-    )
+  const navStyle = {
+    backgroundColor: 'lightGrey',
+    borderRadius: '5px',
+    padding: '5px'
   }
 
   if (user)
     return (
     <Router>
-      <div>
+      <div style={navStyle}>
         <Link style={padding} to='/'>blogs</Link>
         <Link style={padding} to='/users'>users</Link>
+        <LoggedInUser/>
       </div>
-      <div>
         <User handleLogout={handleLogout} />
+      <div>
       </div>
         <Routes>
-          <Route path='/' element={<Blogs/>}/>
+          <Route path='/' element={<Blogs blogFormRef={blogFormRef}/>}>
+            <Route path='blogs/:blog' element={<BlogInfo/>}/>
+          </Route>
           <Route path='users' element={<Users/>}>
             <Route path=':user' element={<UsersBlogs/>}/>
           </Route>
-          <Route path='*' element={<Blogs/>}/>
+          <Route path='*' element={<Blogs blogFormRef={blogFormRef}/>}/>
         </Routes>
     </Router>
     )

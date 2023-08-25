@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../reducers/userReducer'
 
-const User = () => {
+export const LoggedInUser = () => {
   const dispatch = useDispatch()
 
   const handleLogout = () => {
@@ -12,16 +12,21 @@ const User = () => {
     dispatch(setUser(null))
   }
 
+  return (
+    <>
+        {JSON.parse(window.localStorage.loggedUsername)} logged in
+        <button id="logout-button" onClick={handleLogout}>
+          logout
+        </button>
+    </>
+  )
+}
+
+const User = () => {
   return(
   <div>
-    <h2>blogs</h2>
+    <h2>blog app</h2>
     <Notification />
-    <p>
-      {JSON.parse(window.localStorage.loggedUsername)} logged in
-      <button id="logout-button" onClick={handleLogout}>
-        logout
-      </button>
-    </p>
   </div>
 )}
 
