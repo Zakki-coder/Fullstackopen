@@ -47,6 +47,25 @@ export const addLike = (blog) => {
   }
 }
 
+export const addComment = (newComment) => {
+  return (async(dispatch, getState) => {
+    try {
+      const res = await blogsService.postComment(newComment)
+      const comment = res.data
+      const newState = getState().blogs.map(oldBlog => {
+        if (oldBlog.id === comment.blog.id) {
+          const newBlog = {...oldBlog, comments: oldBlog.comments.concat({ comment: comment.comment, id: comment.id })}
+            return newBlog
+          }
+          return oldBlog
+      })
+      dispatch(setBlogs(newState))
+    } catch(exception) {
+      console.log(exception)
+    }
+    })
+}
+
 export const addBlog = (blog) => {
   return async(dispatch) => {
     const response = await blogsService.post(blog)

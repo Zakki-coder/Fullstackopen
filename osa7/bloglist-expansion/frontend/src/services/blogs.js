@@ -40,6 +40,17 @@ const put = async (blog) => {
   }
 }
 
+const postComment = async (blog) => {
+  const config = authorize()
+  const url = `${baseUrl}/${blog.blogId}/comments`
+  try {
+    const response = await axios.post(url, { comment: blog.comment } , config)
+    return response
+  } catch (exception) {
+    console.error(exception)
+  }
+}
+
 const remove = async (id) => {
   const config = authorize()
   const url = `${baseUrl}/${id}`
@@ -51,4 +62,4 @@ const remove = async (id) => {
   }
 }
 
-export default { getAll, post, put, remove }
+export default { getAll, post, put, remove, postComment }

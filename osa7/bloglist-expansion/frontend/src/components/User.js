@@ -14,10 +14,10 @@ export const LoggedInUser = () => {
 
   return (
     <>
-        {JSON.parse(window.localStorage.loggedUsername)} logged in
-        <button id="logout-button" onClick={handleLogout}>
-          logout
-        </button>
+      {JSON.parse(window.localStorage.loggedUsername)} logged in
+      <button id="logout-button" onClick={handleLogout}>
+        logout
+      </button>
     </>
   )
 }

@@ -1,11 +1,13 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/bloglist')
 const User = require('../models/user')
+const Comment = require('../models/comments')
 
 blogsRouter.get('/', async (request, response, next) => {
   try {
     const allBlogs = await Blog.find({})
       .populate('user', { username: 1, name: 1, id: 1 })
+      .populate('comments')
     response.status(200).json(allBlogs)
   } catch (exception) {
     next(exception)
@@ -43,6 +45,20 @@ blogsRouter.put('/:id', async(request, response, next) => {
   }
 })
 
+blogsRouter.post('/:id/comments', async(request, response, next) => {
+  const blogId = request.params.id
+  const blog = await Blog.findById(blogId)
+  const newComment = new Comment({ blog, comment: request.body.comment })
+  blog.comments = blog.comments.concat(newComment._id)
+  try {
+    const res = await newComment.save()
+    await blog.save()
+    response.status(200).json(res)
+  } catch(exception) {
+    next(exception)
+  }
+})
+
 blogsRouter.delete('/:id', async (request, response, next) => {
   const blog = await Blog.findById(request.params.id)
   if (!blog.user || blog.user.toString() !== request.user.id.toString())
@@ -60,6 +76,8 @@ blogsRouter.use((err, req, res, next) => {
     res.status(400).send('Title property missing')
   else if (err.message.includes('Url property missing'))
     res.status(400).send('Url property missing')
+  else if (err.message.includes('Empty comment'))
+    res.status(400).send('Comment missing')
   else if (err.name === 'JsonWebTokenError')
     res.status(401).json({ error: 'token missing or invalid' })
   next(err)
