@@ -25,7 +25,7 @@ export const LoggedInUser = () => {
 const User = () => {
   return(
   <div>
-    <h2>blog app</h2>
+    <h2 className='h2'>blog app</h2>
     <Notification />
   </div>
 )}

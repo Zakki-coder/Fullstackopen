@@ -1,3 +1,40 @@
+h2 {
+  animation: blinker 0.5s step-start infinite;
+}
+
+@keyframes blinker {
+  33% {
+    opacity: 0;
+  }
+  66% {
+    opacity: 0.5;
+  }
+}
+
+.link {
+  color: yellow;
+}
+
+.link:visited {
+  color: wheat;
+}
+
+.benice {
+  margin-left: 0;
+  margin-bottom: 3px;
+  padding: 30px;
+  font-size: 30px;
+  background: lightblue;
+  color: snow;
+}
+
+.root {
+  background: #FF8C00;
+  min-height: 100vh;
+  color: #FF1493;
+  margin-left: 5px;
+}
+
 .notification {
   color: green;
   background: palegreen;
@@ -19,19 +56,48 @@
 }
 
 .blog {
-  display: blog;
   border: solid;
   border-radius: 5px;
   border-width: 2px;
-  padding-top: 10px;
-  padding-left: 3px;
+  padding: 3px;
   margin-bottom: 3px;
+  color: green;
 }
 
 .blog:hover {
   background: lightgreen;
 }
 
+.blog:active {
+  background: black;
+}
+
+.navStyle {
+  background: chocolate;
+  color: cyan;
+  borderRadius: 5px;
+  padding: 5px;
+  marginBottom: 3px;
+}
+
+.blogInfo {
+  color: indigo;
+}
+
+.usersBlogs {
+  color: lightseagreen;
+}
+
 button {
   margin-left: 3px;
+  margin-bottom: 5px;
+  padding: 10px;
+  background: white;
+  box-shadow: 3px 3px 2px black;
+}
+
+button:hover {
+  background: black;
+  color: red;
+  box-shadow: 0px 0px 5px 5px white;
 }

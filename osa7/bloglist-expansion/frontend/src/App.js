@@ -43,23 +43,19 @@ const App = () => {
     padding: 5
   }
 
-  const navStyle = {
-    backgroundColor: 'lightGrey',
-    borderRadius: '5px',
-    padding: '5px'
-  }
-
   if (user)
     return (
+      <div className='root'>
     <Router>
-      <div style={navStyle}>
+      <div className='navStyle'>
         <Link style={padding} to='/'>blogs</Link>
         <Link style={padding} to='/users'>users</Link>
         <LoggedInUser/>
       </div>
+      <div className='header'>
         <User handleLogout={handleLogout} />
-      <div>
       </div>
+      <div className='routes'>
         <Routes>
           <Route path='/' element={<Blogs blogFormRef={blogFormRef}/>}>
             <Route path='blogs/:blog' element={<BlogInfo/>}/>
@@ -69,7 +65,9 @@ const App = () => {
           </Route>
           <Route path='*' element={<Blogs blogFormRef={blogFormRef}/>}/>
         </Routes>
+      </div>
     </Router>
+      </div>
     )
 
   return (

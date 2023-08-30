@@ -18,6 +18,8 @@ const store = configureStore({
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}> 
+  <div className='root'>
     <App />
+  </div>
   </Provider>
 )

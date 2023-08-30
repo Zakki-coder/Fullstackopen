@@ -4,8 +4,17 @@ import Likes from './Likes'
 import { useParams } from 'react-router-dom'
 import { addComment } from '../reducers/blogsReducer'
 
+const BeNice = () => {
+  return (
+    <div className='benice'>
+      <b> Important! </b> Be nice.
+    </div>
+  )
+}
+  
 const Comment = ({ blog }) => {
   const [ comment, setComment ] = useState('')
+  const [ beNice, setBeNice ] = useState(false)
   const dispatch = useDispatch()
 
   const commentHandler = async(event) => {
@@ -17,15 +26,20 @@ const Comment = ({ blog }) => {
       comment
     }
     setComment('')
+    setBeNice(false)
     dispatch(addComment(newComment))
   }
 
   return (
     <>
+    {beNice && <BeNice/>}
       <form onSubmit = { commentHandler } >
         <label>
             <input type='text' id='comment' name='comment' value={comment}
-              onChange={(event) => setComment(event.target.value)}/>
+              onChange={(event) => {
+                setBeNice(true)
+                setComment(event.target.value)
+              }}/>
         </label>
         <button type='submit'>add comment</button>
       </form>
@@ -39,7 +53,7 @@ const BlogInfo = () => {
   if (!blog)
     return null
   return (
-        <div>
+        <div className='blogInfo'>
           <h2>{blog.title}</h2>
           <Comment blog={blog}/>
           <a href={`//${blog.url}`}>{blog.url}</a>

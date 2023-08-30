@@ -11,7 +11,7 @@ const Bloglist = () => {
   }
 
   return (
-    <div className="bloglist" id="bloglist">
+    <div id="bloglist">
       {blogs
         .sort((a, b) => sortFunc(a.likes, b.likes))
         .map((blog) => (

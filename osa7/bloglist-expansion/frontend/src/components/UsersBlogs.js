@@ -7,7 +7,7 @@ const UsersBlogs = () => {
 
   return (
       <>
-        <ul>
+        <ul className='usersBlogs'>
           {
             blogs
               .map(blog => blog.user.username === user ? <li key={blog.id}>{blog.title}</li> : null )

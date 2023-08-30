@@ -8,9 +8,14 @@ const Blogs = ({ blogFormRef }) => {
 
   if (blogId)
     return <Outlet />
+  
+  const style = {
+    display: 'grid',
+    justifyContent: 'left',
+  }
 
   return (
-    <div>
+    <div style={style}>
       <Togglable buttonLabel="create blog" ref={blogFormRef}>
          <Newblog />
       </Togglable>
